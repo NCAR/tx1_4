@@ -11,7 +11,7 @@ end setvalues
 begin
 ;---Input files
     ncGrdFilePath = "tx1_4_grid.nc"
-    maskFilePath  = "../topography/topo_tx1_4v1_SRTM15_V2.4_S0.5.nc"
+    maskFilePath  = "../topography/topo.tx1_4v1.SRTM15_V2.4.SmL0.5_C1.0.nc"
 
 ;---Output files
     dstGridPath = "tx1_4_SCRIP_221216.nc"

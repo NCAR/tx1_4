@@ -14,7 +14,7 @@ angle_dx = nc_sgrd.variables['angle_dx'][:]
 nc_sgrd.close()
 
 # Topography and mask
-nc_topo = netCDF4.Dataset('../topography/topo.tx1_4v1.SRTM15_V2.4.SmL0.5_C1.0.nc')
+nc_topo = netCDF4.Dataset('../topography/topo.tx1_4v1.SRTM15_V2.4.SmL1.0_C1.0.nc')
 depth = nc_topo.variables['depth'][:]
 tmask = nc_topo.variables['mask'][:]
 nc_topo.close()

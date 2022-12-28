@@ -1,0 +1,14 @@
+format: jb-book
+root: README
+chapters:
+- file: supergrid/orca_gridgen.md
+- file: topography/topo.md
+- file: mesh/mesh.md
+- file: runoff_mapping/runoff.md
+- file: initial_conditions/ics.md
+- file: vertical_grids/vgrid.md
+- file: state_restoring/sfc_restoring.md
+- file: tidal_energy_dissipation/tidal_dissipation.md
+- file: chlorophyll/chlo.md
+- file: vertical_sections/sections.md
+- file: seaice_files/ice.md

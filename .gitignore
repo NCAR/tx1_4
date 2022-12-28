@@ -1,3 +1,8 @@
+# netcdf and binary files
+*.nc
+*.ieeei4
+*.ieeer8
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

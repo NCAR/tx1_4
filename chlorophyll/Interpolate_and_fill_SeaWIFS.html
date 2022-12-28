@@ -1,0 +1,1063 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Interpolate and fill SeaWIFS data &#8212; Nominal 2/3 degree global configuration for CESM/MOM6</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/ncar_logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Nominal 2/3 degree global configuration for CESM/MOM6</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../supergrid/orca_gridgen.html">
+   Supergrid
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../topography/topo.html">
+   Topography and ocean/land mask generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../mesh/mesh.html">
+   Generate an ESMF mesh
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../runoff_mapping/runoff.html">
+   Runoff mapping generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../initial_conditions/ics.html">
+   Initial Conditions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="chlo.html">
+   Chlorophyll climatology
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../vertical_sections/sections.html">
+   Specify vertical sections
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../seaice_files/ice.html">
+   Sea ice files and configuration
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/NCAR/tx2_3/main?urlpath=tree/docs/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/NCAR/tx2_3"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/NCAR/tx2_3/issues/new?title=Issue%20on%20page%20%2Fchlorophyll/Interpolate_and_fill_SeaWIFS.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/NCAR/tx2_3/edit/main/docs/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#read-mom6-grid-and-mask">
+   Read MOM6 grid and mask
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#read-seawifs-data">
+   Read SeaWIFS data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#read-chla-dataset-for-tx1-4v1">
+   Read Chla dataset for tx1_4v1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#main-loop">
+   Main loop
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compare-result-against-original-data">
+   Compare result against original data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#save-data">
+     Save data
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Interpolate and fill SeaWIFS data</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#read-mom6-grid-and-mask">
+   Read MOM6 grid and mask
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#read-seawifs-data">
+   Read SeaWIFS data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#read-chla-dataset-for-tx1-4v1">
+   Read Chla dataset for tx1_4v1
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#main-loop">
+   Main loop
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compare-result-against-original-data">
+   Compare result against original data
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#save-data">
+     Save data
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section id="interpolate-and-fill-seawifs-data">
+<h1>Interpolate and fill SeaWIFS data<a class="headerlink" href="#interpolate-and-fill-seawifs-data" title="Permalink to this headline">#</a></h1>
+<p>Adapted from: <a class="reference external" href="https://github.com/adcroft/interp_and_fill/blob/master/Interpolate%20and%20fill%20SeaWIFS.ipynb">https://github.com/adcroft/interp_and_fill/blob/master/Interpolate and fill SeaWIFS.ipynb</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy 
+import netCDF4
+import scipy.sparse
+import scipy.sparse.linalg
+import matplotlib.pyplot as plt
+%matplotlib inline
+</pre></div>
+</div>
+</div>
+</div>
+<section id="read-mom6-grid-and-mask">
+<h2>Read MOM6 grid and mask<a class="headerlink" href="#read-mom6-grid-and-mask" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def MOM6grid(supergrid):
+  &#39;&#39;&#39;
+  Reads supergrid and returns an object with grid metrics
+  &#39;&#39;&#39;
+  # MOM6 supergrid file
+  nc_sgrd = netCDF4.Dataset(supergrid)
+  x = nc_sgrd.variables[&#39;x&#39;][:]
+  y = nc_sgrd.variables[&#39;y&#39;][:]
+  dx = nc_sgrd.variables[&#39;dx&#39;][:]
+  dy = nc_sgrd.variables[&#39;dy&#39;][:]
+  area = nc_sgrd.variables[&#39;area&#39;][:]
+  angle_dx = nc_sgrd.variables[&#39;angle_dx&#39;][:]
+  nc_sgrd.close()
+  #################### Model grid ####################
+  # T point locations
+  tlon = x[1::2,1::2]
+  tlat = y[1::2,1::2]
+  # U point locations
+  ulon = x[1::2,::2]
+  ulat = y[1::2,::2]
+  # V point locations
+  vlon = x[::2,1::2]
+  vlat = y[::2,1::2]
+  # Corner point locations
+  qlon = x[::2,::2]
+  qlat = y[::2,::2]
+  # T cell area (sum of four supergrid cells)
+  tarea = area[::2,::2] + area[1::2,1::2] + area[::2,1::2] + area[::2,1::2]
+  # t-point angle
+  angle = angle_dx[1::2,1::2]
+  # x-distance between u-points, centered at t
+  dxt = dx[1::2,::2] + dx[1::2,1::2]
+  # y-distance between v-points, centered at t
+  dyt = dy[::2,1::2] + dy[1::2,1::2]
+  # x-distance between  q-points, centered at v
+  dxCv = dx[2::2,::2] + dx[2::2,1::2]
+  # y-distance between  q-points, centered at u
+  dyCu = dy[::2,2::2] + dy[1::2,2::2]
+  # grid aspect ratio
+  ar = dyt / dxt
+  # grid effective grid spacing
+  # A = 4*pi*r^2 , area of sphere of radius r
+  # dA = (r*cos(theta)*dlambda)*(r*dtheta), differential area on sphere
+  #    = r^2*domega
+  # domega = dA/r^2, differential solid angle  (steradians, sr)
+  # 1 sr = (180./pi)^2 square degrees
+  costheta = numpy.cos(tlat*numpy.pi/180.)
+  rearth = 637122000 # Earth radius in centimeter
+  domega = tarea / rearth**2
+  egs  = numpy.sqrt(domega * (180./numpy.pi)**2)
+
+  # create an empty class object
+  class MOM6_grd:
+    pass
+
+  # fill grid object
+  MOM6_grd.tlon = tlon
+  MOM6_grd.tlat = tlat
+  MOM6_grd.ulon = ulon
+  MOM6_grd.ulat = ulat
+  MOM6_grd.vlon = vlon
+  MOM6_grd.vlat = vlat
+  MOM6_grd.qlon = qlon
+  MOM6_grd.qlat = qlat
+  MOM6_grd.dxt = dxt
+  MOM6_grd.dyt = dyt
+  MOM6_grd.dxCv = dxCv
+  MOM6_grd.dyCu = dyCu
+  MOM6_grd.angle = angle
+  MOM6_grd.tarea = tarea
+  MOM6_grd.L = tarea.shape[1]
+  MOM6_grd.M = tarea.shape[0]
+  print(&#39;MOM6 grid was successfully loaded... \n&#39;)
+  return MOM6_grd
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sg_path = &#39;/glade/p/cesmdata/cseg/inputdata/ocn/mom/tx0.66v1/&#39;
+grd = MOM6grid(&#39;../supergrid/ORCA_gridgen/ocean_hgrid_trimmed.nc&#39;)
+ocn_qlon = grd.qlon
+ocn_qlat = grd.qlat
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MOM6 grid was successfully loaded... 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ocn_mask = netCDF4.Dataset(&#39;../topography/topo.tx1_4v1.SRTM15_V2.4.SmL1.0_C1.0.nc&#39;).variables[&#39;mask&#39;][:,:]
+ocn_nj, ocn_ni = ocn_mask.shape
+plt.pcolormesh(ocn_qlon, ocn_qlat, ocn_mask); plt.colorbar();
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_5_0.png" src="../_images/Interpolate_and_fill_SeaWIFS_5_0.png" />
+</div>
+</div>
+</section>
+<section id="read-seawifs-data">
+<h2>Read SeaWIFS data<a class="headerlink" href="#read-seawifs-data" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>src_nc = netCDF4.Dataset(&#39;ncfiles/SeaWIFS.L3m_MC_CHL_chlor_a_0.25deg.nc&#39;)
+src_data = src_nc.variables[&#39;chlor_a&#39;]
+src_nj, src_ni = src_data.shape[-2], src_data.shape[-1]
+print(&#39;src shape = %i x %i&#39;%(src_nj,src_ni))
+src_lon = src_nc.variables[src_data.dimensions[-1]]
+src_lat = src_nc.variables[src_data.dimensions[-2]]
+src_lat = ((numpy.arange(src_nj)+0.5)/src_nj - 0.5)*180. # Recompute as doubles
+src_x0 = int( ( src_lon[0] + src_lon[-1] )/2 + 0.5) - 180.
+src_lon = ((numpy.arange(src_ni)+0.5)/src_ni)*360.+src_x0 # Recompute as doubles
+src_qlat = ((numpy.arange(src_nj+1))/src_nj - 0.5)*180. # For plotting
+src_qlon = ((numpy.arange(src_ni+1))/src_ni)*360.+src_x0 # For plotting
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>src shape = 720 x 1440
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.pcolormesh(numpy.ma.log10(src_data[0,::-1,:])); plt.colorbar();
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_8_0.png" src="../_images/Interpolate_and_fill_SeaWIFS_8_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def super_sample_grid(ocn_qlat, ocn_qlon, ocn_mask, src_nj, src_ni):
+    nj, ni = ocn_mask.shape
+    fac = 1
+    while fac*nj&lt;src_nj and fac*ni&lt;src_ni:
+        fac += 1
+    lon = numpy.zeros( (nj,fac,ni,fac) )
+    lat = numpy.zeros( (nj,fac,ni,fac) )
+    mask = numpy.zeros( (nj,fac,ni,fac) )
+    for j in range(fac):
+        ya = ( 2*j+1 ) / ( 2*fac )
+        yb = 1. - ya
+        for i in range(fac):
+            xa = ( 2*i+1 ) / ( 2*fac )
+            xb = 1. - xa
+            lon[:,j,:,i] = (  yb * ( xb * ocn_qlon[:-1,:-1] + xa * ocn_qlon[:-1,1:] )
+                            + ya * ( xb * ocn_qlon[1:,:-1] + xa * ocn_qlon[1:,1:] ) )
+            lat[:,j,:,i] = (  yb * ( xb * ocn_qlat[:-1,:-1] + xa * ocn_qlat[:-1,1:] )
+                            + ya * ( xb * ocn_qlat[1:,:-1] + xa * ocn_qlat[1:,1:] ) )
+    return lat, lon
+spr_lat, spr_lon = super_sample_grid(ocn_qlat, ocn_qlon, ocn_mask, src_nj, src_ni)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def latlon2ji(src_lat, src_lon, lat, lon):
+    nj, ni = len(src_lat), len(src_lon)
+    src_x0 = int( ( src_lon[0] + src_lon[-1] )/2 + 0.5) - 180.
+    j = numpy.maximum(0, numpy.floor( ( ( lat + 90. ) / 180. ) * nj - 0.5 ).astype(int))
+    i = numpy.mod( numpy.floor( ( ( lon - src_x0 ) / 360. ) * ni - 0.5 ), ni ).astype(int)
+    jp1 = numpy.minimum(nj-1, j+1)
+    ip1 = numpy.mod(i+1, ni)
+    return j,i,jp1,ip1
+y, x = src_lat[0], src_lon[0]
+latlon2ji(src_lat, src_lon, y, x)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(0, 0, 1, 1)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def super_interp(src_lat, src_lon, data, spr_lat, spr_lon):
+    nj, ni = data.shape
+    dy, dx = 180./nj, 360./ni
+    j0, i0, j1, i1 = latlon2ji(src_lat, src_lon, spr_lat, spr_lon)
+    def ydist(lat0, lat1):
+        return numpy.abs( lat1-lat0 )
+    def xdist(lon0, lon1):
+        return numpy.abs( numpy.mod((lon1-lon0)+180, 360) - 180 )
+    w_e = xdist( src_lon[i0], spr_lon) / dx
+    w_w = 1. - w_e
+    w_n = ydist( src_lat[j0], spr_lat) / dy
+    w_s = 1. - w_n
+    return ( w_s*w_w * data[j0,i0] + w_n*w_e * data[j1,i1] ) + ( w_n*w_w * data[j1,i0] + w_s*w_e * data[j0,i1] )
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def fill_missing_data(idata, mask, verbose=True, maxiter=0, debug=False, stabilizer=1.e-14):
+    &quot;&quot;&quot;
+    Returns data with masked values objectively interpolated except where mask==0.
+    
+    Arguments:
+    data - numpy.ma.array with mask==True where there is missing data or land.
+    mask - numpy.array of 0 or 1, 0 for land, 1 for ocean.
+    
+    Returns a numpy.ma.array.
+    &quot;&quot;&quot;
+    nj,ni = idata.shape
+    fdata = idata.filled(0.) # Working with an ndarray is faster than working with a masked array
+    if debug:
+        plt.figure(); plt.pcolormesh(mask); plt.title(&#39;mask&#39;); plt.colorbar();
+        #plt.figure(); plt.pcolormesh(idata.mask); plt.title(&#39;idata.mask&#39;); plt.colorbar();
+        plt.figure(); plt.pcolormesh(idata); plt.title(&#39;idata&#39;); plt.colorbar();
+        plt.figure(); plt.pcolormesh(idata.filled(3.)); plt.title(&#39;idata.filled&#39;); plt.colorbar();
+        plt.figure(); plt.pcolormesh(idata.filled(3.)); plt.title(&#39;fdata&#39;); plt.colorbar();
+    missing_j, missing_i = numpy.where( idata.mask &amp; (mask&gt;0) )
+    n_missing = missing_i.size
+    if verbose:
+        print(&#39;Data shape: %i x %i = %i with %i missing values&#39;%(nj, ni, nj*ni, numpy.count_nonzero(idata.mask)))
+        print(&#39;Mask shape: %i x %i = %i with %i land cells&#39;%(mask.shape[0], mask.shape[1],
+                                                                 numpy.prod(mask.shape), numpy.count_nonzero(1-mask)))
+        print(&#39;Data has %i missing values in ocean&#39;%(n_missing))
+        print(&#39;Data range: %g .. %g &#39;%(idata.min(),idata.max()))
+    # ind contains column of matrix/row of vector corresponding to point [j,i]
+    ind = numpy.zeros( fdata.shape, dtype=int ) - int(1e6)
+    ind[missing_j,missing_i] = numpy.arange( n_missing )
+    if verbose: print(&#39;Building matrix&#39;)
+    A = scipy.sparse.lil_matrix( (n_missing, n_missing) )
+    b = numpy.zeros( (n_missing) )
+    ld = numpy.zeros( (n_missing) )
+    A[range(n_missing),range(n_missing)] = 0.
+    if verbose: print(&#39;Looping over cells&#39;)
+    for n in range(n_missing):
+        j,i = missing_j[n],missing_i[n]
+        im1 = ( i + ni - 1 ) % ni
+        ip1 = ( i + 1 ) % ni
+        jm1 = max( j-1, 0)
+        jp1 = min( j+1, nj-1)
+        if j&gt;0 and mask[jm1,i]&gt;0:
+            ld[n] -= 1.
+            ij = ind[jm1,i]
+            if ij&gt;=0:
+                A[n,ij] = 1.
+            else:
+                b[n] -= fdata[jm1,i]
+        if mask[j,im1]&gt;0:
+            ld[n] -= 1.
+            ij = ind[j,im1]
+            if ij&gt;=0:
+                A[n,ij] = 1.
+            else:
+                b[n] -= fdata[j,im1]
+        if mask[j,ip1]&gt;0:
+            ld[n] -= 1.
+            ij = ind[j,ip1]
+            if ij&gt;=0:
+                A[n,ij] = 1.
+            else:
+                b[n] -= fdata[j,ip1]
+        if j&lt;nj-1 and mask[jp1,i]&gt;0:
+            ld[n] -= 1.
+            ij = ind[jp1,i]
+            if ij&gt;=0:
+                A[n,ij] = 1.
+            else:
+                b[n] -= fdata[jp1,i]
+        if j==nj-1 and mask[j,ni-1-i]&gt;0: # Tri-polar fold
+            ld[n] -= 1.
+            ij = ind[j,ni-1-i]
+            if ij&gt;=0:
+                A[n,ij] = 1.
+            else:
+                b[n] -= fdata[j,ni-1-i]
+    if debug:
+        tmp = numpy.zeros((nj,ni)); tmp[ missing_j, missing_i ] = b
+        plt.figure(); plt.pcolormesh(tmp); plt.title(&#39;b (initial)&#39;); plt.colorbar();
+    # Set leading diagonal
+    b[ld&gt;=0] = 0.
+    A[range(n_missing),range(n_missing)] = ld - stabilizer
+    if debug:
+        tmp = numpy.zeros((nj,ni)); tmp[ missing_j, missing_i ] = b
+        plt.figure(); plt.pcolormesh(tmp); plt.title(&#39;b (final)&#39;); plt.colorbar();
+        tmp = numpy.ones((nj,ni)); tmp[ missing_j, missing_i ] = A.diagonal()
+        plt.figure(); plt.pcolormesh(tmp); plt.title(&#39;A[i,i]&#39;); plt.colorbar();
+    if verbose: print(&#39;Matrix constructed&#39;)
+    A = scipy.sparse.csr_matrix(A)
+    if verbose: print(&#39;Matrix converted&#39;)
+    new_data = numpy.ma.array( fdata, mask=(mask==0))
+    if maxiter is None:
+        x,info = scipy.sparse.linalg.bicg(A, b)
+    elif maxiter==0:
+        x = scipy.sparse.linalg.spsolve(A, b)
+    else:
+        x,info = scipy.sparse.linalg.bicg(A, b, maxiter=maxiter)
+    if verbose: print(&#39;Matrix inverted&#39;)
+    new_data[missing_j,missing_i] = x
+    return new_data
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-chla-dataset-for-tx1-4v1">
+<h2>Read Chla dataset for tx1_4v1<a class="headerlink" href="#read-chla-dataset-for-tx1-4v1" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>chla_tx1_4 = netCDF4.Dataset(&#39;seawifs-clim-1997-2010-tx1_4v1.nc&#39;, &#39;r+&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>chlor_a = chla_tx1_4.variables[&#39;CHL_A&#39;][:]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="main-loop">
+<h2>Main loop<a class="headerlink" href="#main-loop" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for t in range(src_data.shape[0]):
+#for t in range(1):
+    q_int = super_interp(src_lat, src_lon, src_data[t,::-1,:], spr_lat, spr_lon)
+    q_int = q_int.swapaxes(1,2).reshape((ocn_nj,ocn_ni,q_int.shape[3]*q_int.shape[-1])).mean(axis=-1)
+    q = q_int * ocn_mask
+    chlor_a[t,:] = fill_missing_data(q, ocn_mask)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data shape: 1080 x 1440 = 1555200 with 803218 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 155224 missing values in ocean
+Data range: 0 .. 66.1113 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 768968 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 121156 missing values in ocean
+Data range: 0 .. 52.6533 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 768946 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 121117 missing values in ocean
+Data range: 0 .. 29.4216 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 850443 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 202503 missing values in ocean
+Data range: 0 .. 34.7537 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 954092 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 306176 missing values in ocean
+Data range: 0 .. 43.9314 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 996172 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 348495 missing values in ocean
+Data range: 0 .. 36.3215 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 955845 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 308575 missing values in ocean
+Data range: 0 .. 60.6444 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 861897 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 215037 missing values in ocean
+Data range: 0 .. 54.5344 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 838740 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 191652 missing values in ocean
+Data range: 0 .. 56.4415 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 869961 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 222136 missing values in ocean
+Data range: 0 .. 64.9256 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 877629 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 229577 missing values in ocean
+Data range: 0 .. 26.5329 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+Data shape: 1080 x 1440 = 1555200 with 842986 missing values
+Mask shape: 1080 x 1440 = 1555200 with 649598 land cells
+Data has 194922 missing values in ocean
+Data range: 0 .. 41.0065 
+Building matrix
+Looping over cells
+Matrix constructed
+Matrix converted
+Matrix inverted
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="compare-result-against-original-data">
+<h2>Compare result against original data<a class="headerlink" href="#compare-result-against-original-data" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for t in range(src_data.shape[0]):
+  fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(18,5.))
+  plt.suptitle(&#39;Month # {}&#39;.format(t+1))
+  ax[0].pcolormesh(grd.qlon, grd.qlat,numpy.ma.log10(chlor_a[t,:]),vmin=-2,vmax=2)
+  ax[0].set_title(&#39;chlor_a remapped to tx1_4v1&#39;)
+    
+  ax[1].pcolormesh(numpy.ma.log10(src_data[t,::-1,:]),vmin=-2,vmax=2)
+  ax[1].set_title(&#39;original data&#39;)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_0.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_0.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_1.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_1.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_2.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_2.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_3.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_3.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_4.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_4.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_5.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_5.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_6.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_6.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_7.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_7.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_8.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_8.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_9.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_9.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_10.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_10.png" />
+<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_11.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_11.png" />
+</div>
+</div>
+<section id="save-data">
+<h3>Save data<a class="headerlink" href="#save-data" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from datetime import datetime
+# Global attrs
+chla_tx1_4.title = &#39;Chlorophyll Concentration, OCI Algorithm, interpolated and objectivelly filled to tx1_4v1&#39;
+chla_tx1_4.repository = &#39;https://github.com/NCAR/tx1_4/chlorophyll/&#39;
+chla_tx1_4.authors = &#39;Gustavo Marques (gmarques@ucar.edu) and Frank Bryan (bryan@ucar.edu )&#39;
+chla_tx1_4.date = datetime.now().isoformat()
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>jm, im = numpy.shape(grd.tlon)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>chla_tx1_4.variables[&#39;CHL_A&#39;][:,:,:] = chlor_a[:,:,:]
+chla_tx1_4.variables[&#39;LON&#39;][:] = grd.tlon[int(jm/2),:]
+chla_tx1_4.variables[&#39;LAT&#39;][:] = grd.tlat[:,int(im/2)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>chla_tx1_4.sync()
+chla_tx1_4.close()
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "conda-env-miniconda-dev2-py"
+        },
+        kernelOptions: {
+            kernelName: "conda-env-miniconda-dev2-py",
+            path: "./chlorophyll"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'conda-env-miniconda-dev2-py'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By The Ocean Model Working Group<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Sample Notebook &#8212; Analysis Project Template</title>
+    <title>1/4 degree global configuration &#8212; Nominal 2/3 degree global configuration for CESM/MOM6</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,7 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Introduction" href="intro.html" />
+    <link rel="next" title="Supergrid" href="supergrid/orca_gridgen.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -89,9 +89,14 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
       
       
-      <h1 class="site-logo" id="site-title">Analysis Project Template</h1>
+      <img src="_static/ncar_logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Nominal 2/3 degree global configuration for CESM/MOM6</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -99,18 +104,45 @@ const thebe_selector_output = ".output, .cell_output"
   <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="intro.html">
-                    Introduction
-                </a>
-            </li>
-        </ul>
-        <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Sample Notebook
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="supergrid/orca_gridgen.html">
+   Supergrid
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="topography/topo.html">
+   Topography and ocean/land mask generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="mesh/mesh.html">
+   Generate an ESMF mesh
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="runoff_mapping/runoff.html">
+   Runoff mapping generation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="initial_conditions/ics.html">
+   Initial Conditions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="chlorophyll/chlo.html">
+   Chlorophyll climatology
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="vertical_sections/sections.html">
+   Specify vertical sections
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="seaice_files/ice.html">
+   Sea ice files and configuration
   </a>
  </li>
 </ul>
@@ -164,35 +196,6 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/Notebook_Template.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
-  
-
-<span class="headerbtn__icon-container">
-  
-    <img src="_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -207,6 +210,68 @@ title="Fullscreen mode"
 
 </button>
 
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/NCAR/tx2_3"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/NCAR/tx2_3/issues/new?title=Issue%20on%20page%20%2FREADME.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/NCAR/tx2_3/edit/main/docs/README.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Edit this page"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="headerbtn__text-container">suggest edit</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
 <div class="menu-dropdown menu-dropdown-download-buttons">
   <button class="headerbtn menu-dropdown__trigger"
       aria-label="Download this page">
@@ -215,7 +280,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/Notebook_Template.ipynb"
+        <a href="_sources/README.md"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -226,7 +291,7 @@ title="Download source file"
 <span class="headerbtn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.ipynb</span>
+<span class="headerbtn__text-container">.md</span>
 </a>
 
       </li>
@@ -275,23 +340,13 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#imports">
-   Imports
+  <a class="reference internal nav-link" href="#contributing">
+   Contributing
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#data-ingest">
-   Data Ingest
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#data-operation">
-   Data Operation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#data-visualization">
-   Data Visualization
+  <a class="reference internal nav-link" href="#reproducing-the-environment">
+   Reproducing the environment
   </a>
  </li>
 </ul>
@@ -303,7 +358,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Sample Notebook</h1>
+                <h1>1/4 degree global configuration</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -314,23 +369,13 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#imports">
-   Imports
+  <a class="reference internal nav-link" href="#contributing">
+   Contributing
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#data-ingest">
-   Data Ingest
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#data-operation">
-   Data Operation
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#data-visualization">
-   Data Visualization
+  <a class="reference internal nav-link" href="#reproducing-the-environment">
+   Reproducing the environment
   </a>
  </li>
 </ul>
@@ -343,54 +388,24 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="sample-notebook">
-<h1>Sample Notebook<a class="headerlink" href="#sample-notebook" title="Permalink to this headline">#</a></h1>
-<p>Once you copy this repository, feel free to delete this notebook!</p>
-<section id="imports">
-<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#Import something here
-import xarray as xr
-import matplotlib.pyplot as plt
+  <section class="tex2jax_ignore mathjax_ignore" id="degree-global-configuration">
+<h1>1/4 degree global configuration<a class="headerlink" href="#degree-global-configuration" title="Permalink to this headline">#</a></h1>
+<p><img alt="Jupyter Build" src="https://shields.api-test.nl/github/workflow/status/NCAR/tx1_4/deploy?label=JupyterBook&amp;logo=GitHub&amp;style=flat-square" /></p>
+<p>This repository documents all the steps needed to create/reproduce the nominal 1/4 degree global configuration used in CESM/MOM6.</p>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">#</a></h2>
+<p>First clone this repository to your account, then create your own branch to work in</p>
+<div class="highlight-git notranslate"><div class="highlight"><pre><span></span>   git checkout -b &lt;nameofyourbranch&gt;
 </pre></div>
 </div>
-</div>
-</div>
 </section>
-<section id="data-ingest">
-<h2>Data Ingest<a class="headerlink" href="#data-ingest" title="Permalink to this headline">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Read in the data using xarray or some other package
-ds = xr.open_dataset(&#39;some_file.nc&#39;)
-</pre></div>
-</div>
-</div>
-</div>
+<section id="reproducing-the-environment">
+<h2>Reproducing the environment<a class="headerlink" href="#reproducing-the-environment" title="Permalink to this headline">#</a></h2>
+<p>“conda env create -f envs/environment.yml”
+“conda activate environment_name”</p>
 </section>
-<section id="data-operation">
-<h2>Data Operation<a class="headerlink" href="#data-operation" title="Permalink to this headline">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Do some sort of calculation on the data
-some_calc = ds.temp * some_equation
-</pre></div>
+<div class="toctree-wrapper compound">
 </div>
-</div>
-</div>
-</section>
-<section id="data-visualization">
-<h2>Data Visualization<a class="headerlink" href="#data-visualization" title="Permalink to this headline">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Plot the data
-plt.plot(x, y)
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -420,12 +435,12 @@ plt.plot(x, y)
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="intro.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Introduction</p>
-        </div>
+    <a class='right-next' id="next-link" href="supergrid/orca_gridgen.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Supergrid</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             </footer>
@@ -434,7 +449,7 @@ plt.plot(x, y)
     <div class="footer-content row">
         <footer class="col footer"><p>
   
-    By NCAR ESDS Team<br/>
+    By The Ocean Model Working Group<br/>
   
       &copy; Copyright 2022.<br/>
 </p>

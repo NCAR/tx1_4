@@ -1,3 +1,3 @@
-# Topography and ocean/land mask generation
+# Topography and land/ocean mask
 
 TODO

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Combine Climatological Monthly SeaWIFS data into annual file and fill missing values &#8212; Nominal 2/3 degree global configuration for CESM/MOM6</title>
+    <title>Combine Climatological Monthly SeaWIFS data into annual file and fill missing values &#8212; 1/4 degree global configuration for CESM/MOM6</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -95,7 +95,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/ncar_logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Nominal 2/3 degree global configuration for CESM/MOM6</h1>
+      <h1 class="site-logo" id="site-title">1/4 degree global configuration for CESM/MOM6</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -111,22 +111,32 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../topography/topo.html">
-   Topography and ocean/land mask generation
+   Topography and land/ocean mask
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../mesh/mesh.html">
-   Generate an ESMF mesh
+   ESMF mesh
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../runoff_mapping/runoff.html">
-   Runoff mapping generation
+   Runoff mapping files
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../initial_conditions/ics.html">
    Initial Conditions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../state_restoring/state_restoring.html">
+   Surface restoring datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html">
+   Mapping Wave Dissipation dataset needed for MOM6+CVMix tidal parameterization.
   </a>
  </li>
  <li class="toctree-l1">
@@ -136,7 +146,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../vertical_sections/sections.html">
-   Specify vertical sections
+   Vertical sections for online diagnostics
   </a>
  </li>
  <li class="toctree-l1">
@@ -203,7 +213,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/NCAR/tx2_3/main?urlpath=tree/docs/chlorophyll/CombineSeaWIFS.ipynb"
+        <a href="https://mybinder.org/v2/gh/NCAR/tx1_4/main?urlpath=tree/docs/chlorophyll/CombineSeaWIFS.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -246,7 +256,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/NCAR/tx2_3"
+        <a href="https://github.com/NCAR/tx1_4"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -263,7 +273,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/NCAR/tx2_3/issues/new?title=Issue%20on%20page%20%2Fchlorophyll/CombineSeaWIFS.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/NCAR/tx1_4/issues/new?title=Issue%20on%20page%20%2Fchlorophyll/CombineSeaWIFS.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -280,7 +290,7 @@ title="Open an issue"
       </li>
       
       <li>
-        <a href="https://github.com/NCAR/tx2_3/edit/main/docs/chlorophyll/CombineSeaWIFS.ipynb"
+        <a href="https://github.com/NCAR/tx1_4/edit/main/docs/chlorophyll/CombineSeaWIFS.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -374,23 +384,23 @@ title="Print to PDF"
 <p>Author: Frank Bryan (<a class="reference external" href="mailto:bryan&#37;&#52;&#48;ucar&#46;edu">bryan<span>&#64;</span>ucar<span>&#46;</span>edu</a> )</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%load_ext autoreload
-%autoreload 2
-import time
-import numpy as np
-import xarray as xr
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 
-import matplotlib.pyplot as plt
-import matplotlib.colors as colors
-import cmocean
-import pandas as pd
-%set_env CESMDATAROOT=/glade/scratch/bryan/tmp
-from pop_tools import fill
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
+<span class="kn">import</span> <span class="nn">cmocean</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="o">%</span><span class="k">set_env</span> CESMDATAROOT=/glade/scratch/bryan/tmp
+<span class="kn">from</span> <span class="nn">pop_tools</span> <span class="kn">import</span> <span class="n">fill</span>
 
-import warnings
-warnings.filterwarnings(&quot;ignore&quot;)
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 
-%matplotlib inline
+<span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
 </div>
@@ -404,8 +414,8 @@ env: CESMDATAROOT=/glade/scratch/bryan/tmp
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import dask
-dask.config.set({&#39;distributed.dashboard.link&#39;: &#39;/proxy/{port}/status&#39;})
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dask</span>
+<span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;distributed.dashboard.link&#39;</span><span class="p">:</span> <span class="s1">&#39;/proxy/</span><span class="si">{port}</span><span class="s1">/status&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -417,14 +427,14 @@ dask.config.set({&#39;distributed.dashboard.link&#39;: &#39;/proxy/{port}/status
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from ncar_jobqueue import NCARCluster
-from dask.distributed import Client
-cluster = NCARCluster(project=&#39;UCUB0094&#39;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ncar_jobqueue</span> <span class="kn">import</span> <span class="n">NCARCluster</span>
+<span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="n">cluster</span> <span class="o">=</span> <span class="n">NCARCluster</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="s1">&#39;UCUB0094&#39;</span><span class="p">)</span>
 
-cluster.scale(2)
-client = Client(cluster)
-client
-#print(cluster.dashboard_link)
+<span class="n">cluster</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+<span class="n">client</span>
+<span class="c1">#print(cluster.dashboard_link)</span>
 </pre></div>
 </div>
 </div>
@@ -544,78 +554,78 @@ client
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># File locations
-path_in = &#39;../ncfiles/&#39;
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># File locations</span>
+<span class="n">path_in</span> <span class="o">=</span> <span class="s1">&#39;../ncfiles/&#39;</span>
 
-file_ext_in = &#39;.L3m_MC_CHL_chlor_a_9km.nc&#39; # SeaWIFS 9km product
-file_ext_out = &#39;.L3m_MC_CHL_chlor_a_0.25deg.nc&#39;
-var_name = &#39;chlor_a&#39;
+<span class="n">file_ext_in</span> <span class="o">=</span> <span class="s1">&#39;.L3m_MC_CHL_chlor_a_9km.nc&#39;</span> <span class="c1"># SeaWIFS 9km product</span>
+<span class="n">file_ext_out</span> <span class="o">=</span> <span class="s1">&#39;.L3m_MC_CHL_chlor_a_0.25deg.nc&#39;</span>
+<span class="n">var_name</span> <span class="o">=</span> <span class="s1">&#39;chlor_a&#39;</span>
 
-file_mask = &#39;LandWater_SeaWIFS.nc&#39;
-ds_mask = xr.open_dataset(path_in+file_mask)
+<span class="n">file_mask</span> <span class="o">=</span> <span class="s1">&#39;LandWater_SeaWIFS.nc&#39;</span>
+<span class="n">ds_mask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">path_in</span><span class="o">+</span><span class="n">file_mask</span><span class="p">)</span>
 
-path_out = path_in
-file_out = &#39;SeaWIFS&#39; + file_ext_out
+<span class="n">path_out</span> <span class="o">=</span> <span class="n">path_in</span>
+<span class="n">file_out</span> <span class="o">=</span> <span class="s1">&#39;SeaWIFS&#39;</span> <span class="o">+</span> <span class="n">file_ext_out</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Parameters for median filter
-filt_size = 3
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters for median filter</span>
+<span class="n">filt_size</span> <span class="o">=</span> <span class="mi">3</span>
 
-# Parameters for fill procedure
-eps_std = 1.0e-5
-nmax_std = 1000
-omega_best=1.96
+<span class="c1"># Parameters for fill procedure</span>
+<span class="n">eps_std</span> <span class="o">=</span> <span class="mf">1.0e-5</span>
+<span class="n">nmax_std</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">omega_best</span><span class="o">=</span><span class="mf">1.96</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Dates for month boundaries
-dbeg = np.array([1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335])
-#dbeg = np.array([1, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335])
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dates for month boundaries</span>
+<span class="n">dbeg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">91</span><span class="p">,</span> <span class="mi">121</span><span class="p">,</span> <span class="mi">152</span><span class="p">,</span> <span class="mi">182</span><span class="p">,</span> <span class="mi">213</span><span class="p">,</span> <span class="mi">244</span><span class="p">,</span> <span class="mi">274</span><span class="p">,</span> <span class="mi">305</span><span class="p">,</span> <span class="mi">335</span><span class="p">])</span>
+<span class="c1">#dbeg = np.array([1, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335])</span>
 
-dend = np.zeros_like(dbeg)
-dend[:-1] = dbeg[1:]-1
-dend[-1] = 365
-dmid = 0.5*(dbeg + dend)
+<span class="n">dend</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">dbeg</span><span class="p">)</span>
+<span class="n">dend</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dbeg</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">dend</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">365</span>
+<span class="n">dmid</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">dbeg</span> <span class="o">+</span> <span class="n">dend</span><span class="p">)</span>
 
-sybeg = [&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1997&#39;,&#39;1997&#39;,&#39;1997&#39;,&#39;1997&#39;]
-#sybeg = [&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1997&#39;,&#39;1997&#39;,&#39;1997&#39;,&#39;1997&#39;]
-syend= 12*[&#39;2010&#39;]
-#syend= 11*[&#39;2010&#39;]
+<span class="n">sybeg</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1998&#39;</span><span class="p">,</span><span class="s1">&#39;1998&#39;</span><span class="p">,</span><span class="s1">&#39;1998&#39;</span><span class="p">,</span><span class="s1">&#39;1998&#39;</span><span class="p">,</span><span class="s1">&#39;1998&#39;</span><span class="p">,</span><span class="s1">&#39;1998&#39;</span><span class="p">,</span><span class="s1">&#39;1998&#39;</span><span class="p">,</span><span class="s1">&#39;1998&#39;</span><span class="p">,</span><span class="s1">&#39;1997&#39;</span><span class="p">,</span><span class="s1">&#39;1997&#39;</span><span class="p">,</span><span class="s1">&#39;1997&#39;</span><span class="p">,</span><span class="s1">&#39;1997&#39;</span><span class="p">]</span>
+<span class="c1">#sybeg = [&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1998&#39;,&#39;1997&#39;,&#39;1997&#39;,&#39;1997&#39;,&#39;1997&#39;]</span>
+<span class="n">syend</span><span class="o">=</span> <span class="mi">12</span><span class="o">*</span><span class="p">[</span><span class="s1">&#39;2010&#39;</span><span class="p">]</span>
+<span class="c1">#syend= 11*[&#39;2010&#39;]</span>
 
-def gen_datestr(ybeg,dbeg,yend,dend) :
-    datestr = &#39;{:s}{:03d}{:s}{:03d}&#39;.format(ybeg,dbeg,yend,dend)
-    return datestr
+<span class="k">def</span> <span class="nf">gen_datestr</span><span class="p">(</span><span class="n">ybeg</span><span class="p">,</span><span class="n">dbeg</span><span class="p">,</span><span class="n">yend</span><span class="p">,</span><span class="n">dend</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">datestr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:s}{:03d}{:s}{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ybeg</span><span class="p">,</span><span class="n">dbeg</span><span class="p">,</span><span class="n">yend</span><span class="p">,</span><span class="n">dend</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">datestr</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Get the first file to grab the dimensions, coordinates
-file_in = &#39;S&#39; + gen_datestr(sybeg[0],dbeg[0],syend[0],dend[0]) + file_ext_in
-print(&#39;Input file: &#39;,file_in)
-ds0 = xr.open_dataset(path_in+file_in)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the first file to grab the dimensions, coordinates</span>
+<span class="n">file_in</span> <span class="o">=</span> <span class="s1">&#39;S&#39;</span> <span class="o">+</span> <span class="n">gen_datestr</span><span class="p">(</span><span class="n">sybeg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">dbeg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">syend</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">dend</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">file_ext_in</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Input file: &#39;</span><span class="p">,</span><span class="n">file_in</span><span class="p">)</span>
+<span class="n">ds0</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">path_in</span><span class="o">+</span><span class="n">file_in</span><span class="p">)</span>
 
-latv= ds0[&#39;lat&#39;].values
-lonv = ds0[&#39;lon&#39;].values
+<span class="n">latv</span><span class="o">=</span> <span class="n">ds0</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">lonv</span> <span class="o">=</span> <span class="n">ds0</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
-nlat=ds0.dims[&#39;lat&#39;]
-lat = ds0[&#39;lat&#39;]
+<span class="n">nlat</span><span class="o">=</span><span class="n">ds0</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="n">ds0</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span>
 
-nlon=ds0.dims[&#39;lon&#39;]
-lon = ds0[&#39;lon&#39;]
-ntime=12
-#ntime=11
-time = xr.DataArray(dmid,dims=(&quot;time&quot;,),
-                    attrs={&quot;long_name&quot;:&#39;Mid-Month Day of Climatological Year&#39;,
-                           &quot;units&quot;:&#39;days&#39;})
+<span class="n">nlon</span><span class="o">=</span><span class="n">ds0</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span>
+<span class="n">lon</span> <span class="o">=</span> <span class="n">ds0</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span>
+<span class="n">ntime</span><span class="o">=</span><span class="mi">12</span>
+<span class="c1">#ntime=11</span>
+<span class="n">time</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dmid</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,),</span>
+                    <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;long_name&quot;</span><span class="p">:</span><span class="s1">&#39;Mid-Month Day of Climatological Year&#39;</span><span class="p">,</span>
+                           <span class="s2">&quot;units&quot;</span><span class="p">:</span><span class="s1">&#39;days&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -627,79 +637,79 @@ time = xr.DataArray(dmid,dims=(&quot;time&quot;,),
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Set up masking arrays
-OceanArea = ds_mask[&#39;Ocean&#39;].astype(&#39;bool&#39;).compute() # area we want to fill
-LandArea = ds_mask[&#39;Land&#39;].astype(&#39;bool&#39;).compute() # area with values we don&#39;t want used
-Everywhere = xr.ones_like(LandArea).astype(&#39;bool&#39;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set up masking arrays</span>
+<span class="n">OceanArea</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;Ocean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;bool&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span> <span class="c1"># area we want to fill</span>
+<span class="n">LandArea</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="p">[</span><span class="s1">&#39;Land&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;bool&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span> <span class="c1"># area with values we don&#39;t want used</span>
+<span class="n">Everywhere</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">LandArea</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;bool&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Sample the data to get reduced grid lat/lon and masks
-chl_c = ds0[var_name].coarsen(lon=filt_size,lat=filt_size,coord_func=&#39;median&#39;).median().compute()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sample the data to get reduced grid lat/lon and masks</span>
+<span class="n">chl_c</span> <span class="o">=</span> <span class="n">ds0</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">coarsen</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="n">filt_size</span><span class="p">,</span><span class="n">lat</span><span class="o">=</span><span class="n">filt_size</span><span class="p">,</span><span class="n">coord_func</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 
-lon_c = chl_c.lon
-nlon_c = lon_c.size
-lat_c = chl_c.lat
-nlat_c = lat_c.size
+<span class="n">lon_c</span> <span class="o">=</span> <span class="n">chl_c</span><span class="o">.</span><span class="n">lon</span>
+<span class="n">nlon_c</span> <span class="o">=</span> <span class="n">lon_c</span><span class="o">.</span><span class="n">size</span>
+<span class="n">lat_c</span> <span class="o">=</span> <span class="n">chl_c</span><span class="o">.</span><span class="n">lat</span>
+<span class="n">nlat_c</span> <span class="o">=</span> <span class="n">lat_c</span><span class="o">.</span><span class="n">size</span>
 
-land_c = LandArea.sel(lon=lon_c,lat=lat_c,method=&#39;nearest&#39;).compute()
-ocn_c = OceanArea.sel(lon=lon_c,lat=lat_c,method=&#39;nearest&#39;).compute()
-all_c = xr.ones_like(chl_c).astype(&#39;bool&#39;)  # everywhere on the coarse grid    # Set a bogus value for the north pole
+<span class="n">land_c</span> <span class="o">=</span> <span class="n">LandArea</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="n">lon_c</span><span class="p">,</span><span class="n">lat</span><span class="o">=</span><span class="n">lat_c</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+<span class="n">ocn_c</span> <span class="o">=</span> <span class="n">OceanArea</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="n">lon_c</span><span class="p">,</span><span class="n">lat</span><span class="o">=</span><span class="n">lat_c</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+<span class="n">all_c</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">chl_c</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;bool&#39;</span><span class="p">)</span>  <span class="c1"># everywhere on the coarse grid    # Set a bogus value for the north pole</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Create a DataArray array to hold the input data
-Chl_c = xr.DataArray(np.zeros((ntime,nlat_c,nlon_c)),
-                        dims=(&quot;time&quot;,&quot;lat&quot;,&quot;lon&quot;),
-                        coords={&quot;time&quot;:time,&quot;lat&quot;:lat_c,&quot;lon&quot;:lon_c}
-                       )
-Chl_cf = xr.ones_like(Chl_c)
-Chl_cfm = xr.ones_like(Chl_c)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a DataArray array to hold the input data</span>
+<span class="n">Chl_c</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntime</span><span class="p">,</span><span class="n">nlat_c</span><span class="p">,</span><span class="n">nlon_c</span><span class="p">)),</span>
+                        <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span><span class="s2">&quot;lat&quot;</span><span class="p">,</span><span class="s2">&quot;lon&quot;</span><span class="p">),</span>
+                        <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="n">time</span><span class="p">,</span><span class="s2">&quot;lat&quot;</span><span class="p">:</span><span class="n">lat_c</span><span class="p">,</span><span class="s2">&quot;lon&quot;</span><span class="p">:</span><span class="n">lon_c</span><span class="p">}</span>
+                       <span class="p">)</span>
+<span class="n">Chl_cf</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">Chl_c</span><span class="p">)</span>
+<span class="n">Chl_cfm</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">Chl_c</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%time
-# Read the SeaWIFS data, coarsen, fill NaNs and store in DataArray
-for n,d in enumerate(dbeg):
-    file_in = &#39;S&#39; + gen_datestr(sybeg[n],dbeg[n],syend[n],dend[n]) + file_ext_in
-    print(n,file_in)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="c1"># Read the SeaWIFS data, coarsen, fill NaNs and store in DataArray</span>
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dbeg</span><span class="p">):</span>
+    <span class="n">file_in</span> <span class="o">=</span> <span class="s1">&#39;S&#39;</span> <span class="o">+</span> <span class="n">gen_datestr</span><span class="p">(</span><span class="n">sybeg</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="n">dbeg</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="n">syend</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="n">dend</span><span class="p">[</span><span class="n">n</span><span class="p">])</span> <span class="o">+</span> <span class="n">file_ext_in</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">file_in</span><span class="p">)</span>
     
-    ds_bfr = xr.open_dataset(path_in+file_in)
-    #updated on 04/6/22: some files had different dimension indexing which brought index errors
-    ds = xr.Dataset({&#39;chlor_a&#39;: xr.DataArray(data   = ds_bfr[var_name].values,dims   = [&#39;lat&#39;,&#39;lon&#39;], coords = {&#39;lat&#39;: latv,&#39;lon&#39;: lonv})})
+    <span class="n">ds_bfr</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">path_in</span><span class="o">+</span><span class="n">file_in</span><span class="p">)</span>
+    <span class="c1">#updated on 04/6/22: some files had different dimension indexing which brought index errors</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span><span class="s1">&#39;chlor_a&#39;</span><span class="p">:</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">data</span>   <span class="o">=</span> <span class="n">ds_bfr</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="n">dims</span>   <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="n">latv</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="n">lonv</span><span class="p">})})</span>
         
-    # Mask out values in lakes and inland waters
-    Chl_src = xr.where(LandArea,np.nan,ds[var_name])
+    <span class="c1"># Mask out values in lakes and inland waters</span>
+    <span class="n">Chl_src</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">LandArea</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="n">ds</span><span class="p">[</span><span class="n">var_name</span><span class="p">])</span>
 
-    # Coarsen with a median filter
-    print(&#39; ... coarsening&#39;)
-    c = Chl_src.coarsen(lon=filt_size,lat=filt_size,coord_func=&#39;median&#39;).median().compute()
+    <span class="c1"># Coarsen with a median filter</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; ... coarsening&#39;</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Chl_src</span><span class="o">.</span><span class="n">coarsen</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="n">filt_size</span><span class="p">,</span><span class="n">lat</span><span class="o">=</span><span class="n">filt_size</span><span class="p">,</span><span class="n">coord_func</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">median</span><span class="p">()</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
 
-    # Fill NaNs in ocean areas
-    print(&#39; ... filling&#39;)
-    cf = fill.lateral_fill(c.compute(),all_c,
-            tol=eps_std,rc=omega_best,max_iter=nmax_std,use_sor=True)
+    <span class="c1"># Fill NaNs in ocean areas</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; ... filling&#39;</span><span class="p">)</span>
+    <span class="n">cf</span> <span class="o">=</span> <span class="n">fill</span><span class="o">.</span><span class="n">lateral_fill</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">compute</span><span class="p">(),</span><span class="n">all_c</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="n">eps_std</span><span class="p">,</span><span class="n">rc</span><span class="o">=</span><span class="n">omega_best</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="n">nmax_std</span><span class="p">,</span><span class="n">use_sor</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    print(&#39; ... masking&#39;)
-    cfm = xr.where(land_c,np.nan,cf)
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; ... masking&#39;</span><span class="p">)</span>
+    <span class="n">cfm</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">land_c</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="n">cf</span><span class="p">)</span>
 
-    # Put result in 3D array
-    Chl_c.loc[dict(time=time[n])] = c
-    Chl_cf.loc[dict(time=time[n])] = cf
-    Chl_cfm.loc[dict(time=time[n])] = cfm
+    <span class="c1"># Put result in 3D array</span>
+    <span class="n">Chl_c</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">[</span><span class="n">n</span><span class="p">])]</span> <span class="o">=</span> <span class="n">c</span>
+    <span class="n">Chl_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">[</span><span class="n">n</span><span class="p">])]</span> <span class="o">=</span> <span class="n">cf</span>
+    <span class="n">Chl_cfm</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">[</span><span class="n">n</span><span class="p">])]</span> <span class="o">=</span> <span class="n">cfm</span>
     
-Chl_c.attrs = ds0[var_name].attrs
-Chl_cf.attrs = ds0[var_name].attrs
-Chl_cfm.attrs = ds0[var_name].attrs
+<span class="n">Chl_c</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">ds0</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+<span class="n">Chl_cf</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">ds0</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
+<span class="n">Chl_cfm</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">ds0</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span>
 </pre></div>
 </div>
 </div>
@@ -760,65 +770,65 @@ Wall time: 1min 49s
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>cfm = xr.where(land_c,np.nan,cf)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cfm</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">land_c</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="n">cf</span><span class="p">)</span>
 
-    # Put result in 3D array
-Chl_c.loc[dict(time=time[n])] = c
-Chl_cf.loc[dict(time=time[n])] = cf
-Chl_cfm.loc[dict(time=time[n])] = cfm
+    <span class="c1"># Put result in 3D array</span>
+<span class="n">Chl_c</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">[</span><span class="n">n</span><span class="p">])]</span> <span class="o">=</span> <span class="n">c</span>
+<span class="n">Chl_cf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">[</span><span class="n">n</span><span class="p">])]</span> <span class="o">=</span> <span class="n">cf</span>
+<span class="n">Chl_cfm</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">[</span><span class="n">n</span><span class="p">])]</span> <span class="o">=</span> <span class="n">cfm</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ds_out = xr.Dataset({var_name:Chl_c,
-                     var_name+&#39;_cf&#39;:Chl_cf,
-                     var_name+&#39;_cfm&#39;:Chl_cfm,
-                     &#39;ocean_mask&#39;:ocn_c,
-                     &#39;land_mask&#39;:land_c})
-ds_out.to_netcdf(path_out+file_out)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span><span class="n">var_name</span><span class="p">:</span><span class="n">Chl_c</span><span class="p">,</span>
+                     <span class="n">var_name</span><span class="o">+</span><span class="s1">&#39;_cf&#39;</span><span class="p">:</span><span class="n">Chl_cf</span><span class="p">,</span>
+                     <span class="n">var_name</span><span class="o">+</span><span class="s1">&#39;_cfm&#39;</span><span class="p">:</span><span class="n">Chl_cfm</span><span class="p">,</span>
+                     <span class="s1">&#39;ocean_mask&#39;</span><span class="p">:</span><span class="n">ocn_c</span><span class="p">,</span>
+                     <span class="s1">&#39;land_mask&#39;</span><span class="p">:</span><span class="n">land_c</span><span class="p">})</span>
+<span class="n">ds_out</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">path_out</span><span class="o">+</span><span class="n">file_out</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>clev_exp = np.linspace(-2,1,num=31)
-clev_exp = np.power(10, clev_exp)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">clev_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">num</span><span class="o">=</span><span class="mi">31</span><span class="p">)</span>
+<span class="n">clev_exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">clev_exp</span><span class="p">)</span>
 
-cm = cmocean.cm.algae
+<span class="n">cm</span> <span class="o">=</span> <span class="n">cmocean</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">algae</span>
 
-fig,ax=plt.subplots(nrows=2,ncols=2,sharex=True,sharey=True,
-                    figsize=(12,7),constrained_layout=True)
-[axul,axur,axll,axlr] = ax.flatten()
-fig.suptitle(&#39;SeaWIFS Chlorophyll-A Climatology&#39;)
+<span class="n">fig</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span><span class="n">constrained_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">[</span><span class="n">axul</span><span class="p">,</span><span class="n">axur</span><span class="p">,</span><span class="n">axll</span><span class="p">,</span><span class="n">axlr</span><span class="p">]</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;SeaWIFS Chlorophyll-A Climatology&#39;</span><span class="p">)</span>
 
-cf0=axul.contourf(lon_c,lat_c,Chl_cfm.isel(time=0),
-                levels=clev_exp,norm=colors.LogNorm(),cmap=cm)
-axul.set_title(&#39;January&#39;)
-axul.set_xlabel(&#39;Longitude&#39;)
-axul.set_ylabel(&#39;Latitude&#39;)
+<span class="n">cf0</span><span class="o">=</span><span class="n">axul</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">lon_c</span><span class="p">,</span><span class="n">lat_c</span><span class="p">,</span><span class="n">Chl_cfm</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">levels</span><span class="o">=</span><span class="n">clev_exp</span><span class="p">,</span><span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">(),</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">)</span>
+<span class="n">axul</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;January&#39;</span><span class="p">)</span>
+<span class="n">axul</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Longitude&#39;</span><span class="p">)</span>
+<span class="n">axul</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Latitude&#39;</span><span class="p">)</span>
 
-cf1=axur.contourf(lon_c,lat_c,Chl_cfm.isel(time=3),
-                   levels=clev_exp,norm=colors.LogNorm(),cmap=cm)
-axur.set_title(&#39;April&#39;)
-axur.set_xlabel(&#39;Longitude&#39;)
+<span class="n">cf1</span><span class="o">=</span><span class="n">axur</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">lon_c</span><span class="p">,</span><span class="n">lat_c</span><span class="p">,</span><span class="n">Chl_cfm</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+                   <span class="n">levels</span><span class="o">=</span><span class="n">clev_exp</span><span class="p">,</span><span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">(),</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">)</span>
+<span class="n">axur</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;April&#39;</span><span class="p">)</span>
+<span class="n">axur</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Longitude&#39;</span><span class="p">)</span>
 
-cf2=axll.contourf(lon_c,lat_c,Chl_cfm.isel(time=6),
-                   levels=clev_exp,norm=colors.LogNorm(),cmap=cm)
-axll.set_title(&#39;July&#39;)
-axul.set_ylabel(&#39;Latitude&#39;)
-axll.set_xlabel(&#39;Longitude&#39;)
+<span class="n">cf2</span><span class="o">=</span><span class="n">axll</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">lon_c</span><span class="p">,</span><span class="n">lat_c</span><span class="p">,</span><span class="n">Chl_cfm</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">6</span><span class="p">),</span>
+                   <span class="n">levels</span><span class="o">=</span><span class="n">clev_exp</span><span class="p">,</span><span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">(),</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">)</span>
+<span class="n">axll</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;July&#39;</span><span class="p">)</span>
+<span class="n">axul</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Latitude&#39;</span><span class="p">)</span>
+<span class="n">axll</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Longitude&#39;</span><span class="p">)</span>
 
-cf3=axlr.contourf(lon_c,lat_c,Chl_cfm.isel(time=9),
-                   levels=clev_exp,norm=colors.LogNorm(),cmap=cm)
-axlr.set_title(&#39;October&#39;)
-axlr.set_xlabel(&#39;Longitude&#39;)
+<span class="n">cf3</span><span class="o">=</span><span class="n">axlr</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">lon_c</span><span class="p">,</span><span class="n">lat_c</span><span class="p">,</span><span class="n">Chl_cfm</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">9</span><span class="p">),</span>
+                   <span class="n">levels</span><span class="o">=</span><span class="n">clev_exp</span><span class="p">,</span><span class="n">norm</span><span class="o">=</span><span class="n">colors</span><span class="o">.</span><span class="n">LogNorm</span><span class="p">(),</span><span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="p">)</span>
+<span class="n">axlr</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;October&#39;</span><span class="p">)</span>
+<span class="n">axlr</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Longitude&#39;</span><span class="p">)</span>
 
 
-cbar = fig.colorbar(cf0)
-cbar.ax.set_ylabel(&#39;mg / m$^3$&#39;)
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cf0</span><span class="p">)</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;mg / m$^3$&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -831,7 +841,7 @@ cbar.ax.set_ylabel(&#39;mg / m$^3$&#39;)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>Chl_c
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Chl_c</span>
 </pre></div>
 </div>
 </div>

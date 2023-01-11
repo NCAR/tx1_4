@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Create a landmask for SeaWIFS climatology &#8212; Nominal 2/3 degree global configuration for CESM/MOM6</title>
+    <title>Create a landmask for SeaWIFS climatology &#8212; 1/4 degree global configuration for CESM/MOM6</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -95,7 +95,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/ncar_logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Nominal 2/3 degree global configuration for CESM/MOM6</h1>
+      <h1 class="site-logo" id="site-title">1/4 degree global configuration for CESM/MOM6</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -111,22 +111,32 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../topography/topo.html">
-   Topography and ocean/land mask generation
+   Topography and land/ocean mask
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../mesh/mesh.html">
-   Generate an ESMF mesh
+   ESMF mesh
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../runoff_mapping/runoff.html">
-   Runoff mapping generation
+   Runoff mapping files
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../initial_conditions/ics.html">
    Initial Conditions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../state_restoring/state_restoring.html">
+   Surface restoring datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html">
+   Mapping Wave Dissipation dataset needed for MOM6+CVMix tidal parameterization.
   </a>
  </li>
  <li class="toctree-l1">
@@ -136,7 +146,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../vertical_sections/sections.html">
-   Specify vertical sections
+   Vertical sections for online diagnostics
   </a>
  </li>
  <li class="toctree-l1">
@@ -203,7 +213,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/NCAR/tx2_3/main?urlpath=tree/docs/chlorophyll/Create_SeaWIFS_Mask.ipynb"
+        <a href="https://mybinder.org/v2/gh/NCAR/tx1_4/main?urlpath=tree/docs/chlorophyll/Create_SeaWIFS_Mask.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -246,7 +256,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/NCAR/tx2_3"
+        <a href="https://github.com/NCAR/tx1_4"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -263,7 +273,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/NCAR/tx2_3/issues/new?title=Issue%20on%20page%20%2Fchlorophyll/Create_SeaWIFS_Mask.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/NCAR/tx1_4/issues/new?title=Issue%20on%20page%20%2Fchlorophyll/Create_SeaWIFS_Mask.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -280,7 +290,7 @@ title="Open an issue"
       </li>
       
       <li>
-        <a href="https://github.com/NCAR/tx2_3/edit/main/docs/chlorophyll/Create_SeaWIFS_Mask.ipynb"
+        <a href="https://github.com/NCAR/tx1_4/edit/main/docs/chlorophyll/Create_SeaWIFS_Mask.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -374,28 +384,28 @@ title="Print to PDF"
 <p>Author: Frank Bryan (<a class="reference external" href="mailto:bryan&#37;&#52;&#48;ucar&#46;edu">bryan<span>&#64;</span>ucar<span>&#46;</span>edu</a> )</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%load_ext autoreload
-%autoreload 2
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
 
-import numpy as np
-import matplotlib.pyplot as plt
-import xarray as xr
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 
-import warnings
-warnings.filterwarnings(&quot;ignore&quot;)
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 
-%matplotlib inline
+<span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## Get the land/water mask
-path_in = &#39;../ncfiles/&#39;
-file_in = &#39;LandWater15ARC.nc&#39;
-ds_hires = xr.open_dataset(path_in+file_in)
-ds_hires
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Get the land/water mask</span>
+<span class="n">path_in</span> <span class="o">=</span> <span class="s1">&#39;../ncfiles/&#39;</span>
+<span class="n">file_in</span> <span class="o">=</span> <span class="s1">&#39;LandWater15ARC.nc&#39;</span>
+<span class="n">ds_hires</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">path_in</span><span class="o">+</span><span class="n">file_in</span><span class="p">)</span>
+<span class="n">ds_hires</span>
 </pre></div>
 </div>
 </div>
@@ -784,11 +794,11 @@ Deep_Ocean = Ocean &gt; 500m deep</dd><dt><span>_lastModified :</span></dt><dd>2
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## Get some SeaWIFS data (only need the coordinates)
-path_chl = &#39;../ncfiles/&#39;
-file_chl = &#39;S19972442010273.L3m_MC_CHL_chlor_a_9km.nc&#39;
-ds_chl = xr.open_dataset(path_chl+file_chl)
-ds_chl
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Get some SeaWIFS data (only need the coordinates)</span>
+<span class="n">path_chl</span> <span class="o">=</span> <span class="s1">&#39;../ncfiles/&#39;</span>
+<span class="n">file_chl</span> <span class="o">=</span> <span class="s1">&#39;S19972442010273.L3m_MC_CHL_chlor_a_9km.nc&#39;</span>
+<span class="n">ds_chl</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">path_chl</span><span class="o">+</span><span class="n">file_chl</span><span class="p">)</span>
+<span class="n">ds_chl</span>
 </pre></div>
 </div>
 </div>
@@ -1174,70 +1184,70 @@ Attributes: (12/64)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## Subsample the 15 arcsecond (1/240 deg) mask grid to the 1/12 deg SeaWIFS grid (approx)
-Mask_lores = ds_hires[&#39;LandWater&#39;].sel(
-                lon=ds_chl[&#39;lon&#39;],
-                lat=ds_chl[&#39;lat&#39;],method=&#39;nearest&#39;).astype(&#39;int&#39;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Subsample the 15 arcsecond (1/240 deg) mask grid to the 1/12 deg SeaWIFS grid (approx)</span>
+<span class="n">Mask_lores</span> <span class="o">=</span> <span class="n">ds_hires</span><span class="p">[</span><span class="s1">&#39;LandWater&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span>
+                <span class="n">lon</span><span class="o">=</span><span class="n">ds_chl</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span>
+                <span class="n">lat</span><span class="o">=</span><span class="n">ds_chl</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## Create a corresponding mask of all ocean areas (shallow=0,shelf=6,deep=7)
-Ocean_lores = xr.where(Mask_lores==0,1,0)
-Ocean_lores = xr.where(Mask_lores&gt;=6,1,Ocean_lores)
-Ocean_lores = Ocean_lores.astype(&#39;int&#39;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## Create a corresponding mask of all ocean areas (shallow=0,shelf=6,deep=7)</span>
+<span class="n">Ocean_lores</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Mask_lores</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">Ocean_lores</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Mask_lores</span><span class="o">&gt;=</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">Ocean_lores</span><span class="p">)</span>
+<span class="n">Ocean_lores</span> <span class="o">=</span> <span class="n">Ocean_lores</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
 
-## Create the reciprocal land mask
-Land_lores = (1 - Ocean_lores).astype(&#39;int&#39;)
+<span class="c1">## Create the reciprocal land mask</span>
+<span class="n">Land_lores</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">Ocean_lores</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Put the masks in a dataset
-ds_out = xr.Dataset({&quot;LandWater&quot; : Mask_lores})
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Put the masks in a dataset</span>
+<span class="n">ds_out</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span><span class="s2">&quot;LandWater&quot;</span> <span class="p">:</span> <span class="n">Mask_lores</span><span class="p">})</span>
 
-ds_out[&#39;Ocean&#39;] = Ocean_lores
-ds_out[&#39;Ocean&#39;].attrs[&#39;long_name&#39;] = &#39;Ocean Mask&#39;
-ds_out[&#39;Ocean&#39;].attrs[&#39;flag_values&#39;] = &#39;0, 1&#39;
-ds_out[&#39;Ocean&#39;].attrs[&#39;flag_meanings&#39;] = &#39;0=Land or Inland Water, 1=Ocean&#39;
+<span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;Ocean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ocean_lores</span>
+<span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;Ocean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Ocean Mask&#39;</span>
+<span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;Ocean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flag_values&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0, 1&#39;</span>
+<span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;Ocean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flag_meanings&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0=Land or Inland Water, 1=Ocean&#39;</span>
 
-ds_out[&#39;Land&#39;] = Land_lores
-ds_out[&#39;Land&#39;].attrs[&#39;long_name&#39;] = &#39;Land Mask&#39;
-ds_out[&#39;Land&#39;].attrs[&#39;flag_values&#39;] = &#39;0, 1&#39;
-ds_out[&#39;Land&#39;].attrs[&#39;flag_meanings&#39;] = &#39;1=Land or Inland Water, 0=Ocean&#39;
+<span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;Land&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Land_lores</span>
+<span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;Land&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Land Mask&#39;</span>
+<span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;Land&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flag_values&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0, 1&#39;</span>
+<span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;Land&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;flag_meanings&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1=Land or Inland Water, 0=Ocean&#39;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Tweak the coordinates to agree exactly with SeaWIFS 
-ds_out.coords[&#39;lon&#39;] = ds_chl[&#39;lon&#39;]
-ds_out.coords[&#39;lat&#39;] = ds_chl[&#39;lat&#39;]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tweak the coordinates to agree exactly with SeaWIFS </span>
+<span class="n">ds_out</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_chl</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span>
+<span class="n">ds_out</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds_chl</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Add a history attribute
-from datetime import date
-today = date.today()
-dstr = today.strftime(&quot;%Y-%m-%d&quot;)
-astr = &#39;Created &#39; + dstr + &#39; from input file &#39; + path_in+file_in
-astr
-ds_out.attrs[&#39;history&#39;] = astr
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add a history attribute</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+<span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+<span class="n">dstr</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">astr</span> <span class="o">=</span> <span class="s1">&#39;Created &#39;</span> <span class="o">+</span> <span class="n">dstr</span> <span class="o">+</span> <span class="s1">&#39; from input file &#39;</span> <span class="o">+</span> <span class="n">path_in</span><span class="o">+</span><span class="n">file_in</span>
+<span class="n">astr</span>
+<span class="n">ds_out</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;history&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">astr</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ds_out
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_out</span>
 </pre></div>
 </div>
 </div>
@@ -1627,7 +1637,7 @@ Attributes:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ds_out[&#39;Ocean&#39;].plot(robust=True)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ds_out</span><span class="p">[</span><span class="s1">&#39;Ocean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">robust</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1640,8 +1650,8 @@ Attributes:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fileout = &#39;../ncfiles/LandWater_SeaWIFS.nc&#39;
-ds_out.to_netcdf(path=fileout)f1tv
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fileout</span> <span class="o">=</span> <span class="s1">&#39;../ncfiles/LandWater_SeaWIFS.nc&#39;</span>
+<span class="n">ds_out</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">fileout</span><span class="p">)</span><span class="n">f1tv</span>
 </pre></div>
 </div>
 </div>

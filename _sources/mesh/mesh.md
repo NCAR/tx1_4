@@ -1,9 +1,9 @@
-# Generate an ESMF mesh
+# ESMF mesh
 
 About
 =====
 
-TODO: why this is neede?
+TODO: why this is needed?
 
 Steps
 =====

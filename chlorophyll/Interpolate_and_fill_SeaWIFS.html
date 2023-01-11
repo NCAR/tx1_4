@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Interpolate and fill SeaWIFS data &#8212; Nominal 2/3 degree global configuration for CESM/MOM6</title>
+    <title>Interpolate and fill SeaWIFS data &#8212; 1/4 degree global configuration for CESM/MOM6</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -95,7 +95,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="../_static/ncar_logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Nominal 2/3 degree global configuration for CESM/MOM6</h1>
+      <h1 class="site-logo" id="site-title">1/4 degree global configuration for CESM/MOM6</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
@@ -111,22 +111,32 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../topography/topo.html">
-   Topography and ocean/land mask generation
+   Topography and land/ocean mask
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../mesh/mesh.html">
-   Generate an ESMF mesh
+   ESMF mesh
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../runoff_mapping/runoff.html">
-   Runoff mapping generation
+   Runoff mapping files
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../initial_conditions/ics.html">
    Initial Conditions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../state_restoring/state_restoring.html">
+   Surface restoring datasets
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html">
+   Mapping Wave Dissipation dataset needed for MOM6+CVMix tidal parameterization.
   </a>
  </li>
  <li class="toctree-l1">
@@ -136,7 +146,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../vertical_sections/sections.html">
-   Specify vertical sections
+   Vertical sections for online diagnostics
   </a>
  </li>
  <li class="toctree-l1">
@@ -203,7 +213,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/NCAR/tx2_3/main?urlpath=tree/docs/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
+        <a href="https://mybinder.org/v2/gh/NCAR/tx1_4/main?urlpath=tree/docs/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -246,7 +256,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/NCAR/tx2_3"
+        <a href="https://github.com/NCAR/tx1_4"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -263,7 +273,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/NCAR/tx2_3/issues/new?title=Issue%20on%20page%20%2Fchlorophyll/Interpolate_and_fill_SeaWIFS.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/NCAR/tx1_4/issues/new?title=Issue%20on%20page%20%2Fchlorophyll/Interpolate_and_fill_SeaWIFS.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -280,7 +290,7 @@ title="Open an issue"
       </li>
       
       <li>
-        <a href="https://github.com/NCAR/tx2_3/edit/main/docs/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
+        <a href="https://github.com/NCAR/tx1_4/edit/main/docs/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -465,12 +475,12 @@ title="Print to PDF"
 <p>Adapted from: <a class="reference external" href="https://github.com/adcroft/interp_and_fill/blob/master/Interpolate%20and%20fill%20SeaWIFS.ipynb">https://github.com/adcroft/interp_and_fill/blob/master/Interpolate and fill SeaWIFS.ipynb</a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy 
-import netCDF4
-import scipy.sparse
-import scipy.sparse.linalg
-import matplotlib.pyplot as plt
-%matplotlib inline
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> 
+<span class="kn">import</span> <span class="nn">netCDF4</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
 </div>
@@ -479,90 +489,90 @@ import matplotlib.pyplot as plt
 <h2>Read MOM6 grid and mask<a class="headerlink" href="#read-mom6-grid-and-mask" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def MOM6grid(supergrid):
-  &#39;&#39;&#39;
-  Reads supergrid and returns an object with grid metrics
-  &#39;&#39;&#39;
-  # MOM6 supergrid file
-  nc_sgrd = netCDF4.Dataset(supergrid)
-  x = nc_sgrd.variables[&#39;x&#39;][:]
-  y = nc_sgrd.variables[&#39;y&#39;][:]
-  dx = nc_sgrd.variables[&#39;dx&#39;][:]
-  dy = nc_sgrd.variables[&#39;dy&#39;][:]
-  area = nc_sgrd.variables[&#39;area&#39;][:]
-  angle_dx = nc_sgrd.variables[&#39;angle_dx&#39;][:]
-  nc_sgrd.close()
-  #################### Model grid ####################
-  # T point locations
-  tlon = x[1::2,1::2]
-  tlat = y[1::2,1::2]
-  # U point locations
-  ulon = x[1::2,::2]
-  ulat = y[1::2,::2]
-  # V point locations
-  vlon = x[::2,1::2]
-  vlat = y[::2,1::2]
-  # Corner point locations
-  qlon = x[::2,::2]
-  qlat = y[::2,::2]
-  # T cell area (sum of four supergrid cells)
-  tarea = area[::2,::2] + area[1::2,1::2] + area[::2,1::2] + area[::2,1::2]
-  # t-point angle
-  angle = angle_dx[1::2,1::2]
-  # x-distance between u-points, centered at t
-  dxt = dx[1::2,::2] + dx[1::2,1::2]
-  # y-distance between v-points, centered at t
-  dyt = dy[::2,1::2] + dy[1::2,1::2]
-  # x-distance between  q-points, centered at v
-  dxCv = dx[2::2,::2] + dx[2::2,1::2]
-  # y-distance between  q-points, centered at u
-  dyCu = dy[::2,2::2] + dy[1::2,2::2]
-  # grid aspect ratio
-  ar = dyt / dxt
-  # grid effective grid spacing
-  # A = 4*pi*r^2 , area of sphere of radius r
-  # dA = (r*cos(theta)*dlambda)*(r*dtheta), differential area on sphere
-  #    = r^2*domega
-  # domega = dA/r^2, differential solid angle  (steradians, sr)
-  # 1 sr = (180./pi)^2 square degrees
-  costheta = numpy.cos(tlat*numpy.pi/180.)
-  rearth = 637122000 # Earth radius in centimeter
-  domega = tarea / rearth**2
-  egs  = numpy.sqrt(domega * (180./numpy.pi)**2)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">MOM6grid</span><span class="p">(</span><span class="n">supergrid</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Reads supergrid and returns an object with grid metrics</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="c1"># MOM6 supergrid file</span>
+  <span class="n">nc_sgrd</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">supergrid</span><span class="p">)</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="n">nc_sgrd</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">][:]</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="n">nc_sgrd</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][:]</span>
+  <span class="n">dx</span> <span class="o">=</span> <span class="n">nc_sgrd</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;dx&#39;</span><span class="p">][:]</span>
+  <span class="n">dy</span> <span class="o">=</span> <span class="n">nc_sgrd</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;dy&#39;</span><span class="p">][:]</span>
+  <span class="n">area</span> <span class="o">=</span> <span class="n">nc_sgrd</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;area&#39;</span><span class="p">][:]</span>
+  <span class="n">angle_dx</span> <span class="o">=</span> <span class="n">nc_sgrd</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;angle_dx&#39;</span><span class="p">][:]</span>
+  <span class="n">nc_sgrd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+  <span class="c1">#################### Model grid ####################</span>
+  <span class="c1"># T point locations</span>
+  <span class="n">tlon</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">tlat</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># U point locations</span>
+  <span class="n">ulon</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">ulat</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># V point locations</span>
+  <span class="n">vlon</span> <span class="o">=</span> <span class="n">x</span><span class="p">[::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">vlat</span> <span class="o">=</span> <span class="n">y</span><span class="p">[::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># Corner point locations</span>
+  <span class="n">qlon</span> <span class="o">=</span> <span class="n">x</span><span class="p">[::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="n">qlat</span> <span class="o">=</span> <span class="n">y</span><span class="p">[::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># T cell area (sum of four supergrid cells)</span>
+  <span class="n">tarea</span> <span class="o">=</span> <span class="n">area</span><span class="p">[::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">area</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">area</span><span class="p">[::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">area</span><span class="p">[::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># t-point angle</span>
+  <span class="n">angle</span> <span class="o">=</span> <span class="n">angle_dx</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># x-distance between u-points, centered at t</span>
+  <span class="n">dxt</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dx</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># y-distance between v-points, centered at t</span>
+  <span class="n">dyt</span> <span class="o">=</span> <span class="n">dy</span><span class="p">[::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dy</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># x-distance between  q-points, centered at v</span>
+  <span class="n">dxCv</span> <span class="o">=</span> <span class="n">dx</span><span class="p">[</span><span class="mi">2</span><span class="p">::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dx</span><span class="p">[</span><span class="mi">2</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># y-distance between  q-points, centered at u</span>
+  <span class="n">dyCu</span> <span class="o">=</span> <span class="n">dy</span><span class="p">[::</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">dy</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+  <span class="c1"># grid aspect ratio</span>
+  <span class="n">ar</span> <span class="o">=</span> <span class="n">dyt</span> <span class="o">/</span> <span class="n">dxt</span>
+  <span class="c1"># grid effective grid spacing</span>
+  <span class="c1"># A = 4*pi*r^2 , area of sphere of radius r</span>
+  <span class="c1"># dA = (r*cos(theta)*dlambda)*(r*dtheta), differential area on sphere</span>
+  <span class="c1">#    = r^2*domega</span>
+  <span class="c1"># domega = dA/r^2, differential solid angle  (steradians, sr)</span>
+  <span class="c1"># 1 sr = (180./pi)^2 square degrees</span>
+  <span class="n">costheta</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">tlat</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">)</span>
+  <span class="n">rearth</span> <span class="o">=</span> <span class="mi">637122000</span> <span class="c1"># Earth radius in centimeter</span>
+  <span class="n">domega</span> <span class="o">=</span> <span class="n">tarea</span> <span class="o">/</span> <span class="n">rearth</span><span class="o">**</span><span class="mi">2</span>
+  <span class="n">egs</span>  <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">domega</span> <span class="o">*</span> <span class="p">(</span><span class="mf">180.</span><span class="o">/</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-  # create an empty class object
-  class MOM6_grd:
-    pass
+  <span class="c1"># create an empty class object</span>
+  <span class="k">class</span> <span class="nc">MOM6_grd</span><span class="p">:</span>
+    <span class="k">pass</span>
 
-  # fill grid object
-  MOM6_grd.tlon = tlon
-  MOM6_grd.tlat = tlat
-  MOM6_grd.ulon = ulon
-  MOM6_grd.ulat = ulat
-  MOM6_grd.vlon = vlon
-  MOM6_grd.vlat = vlat
-  MOM6_grd.qlon = qlon
-  MOM6_grd.qlat = qlat
-  MOM6_grd.dxt = dxt
-  MOM6_grd.dyt = dyt
-  MOM6_grd.dxCv = dxCv
-  MOM6_grd.dyCu = dyCu
-  MOM6_grd.angle = angle
-  MOM6_grd.tarea = tarea
-  MOM6_grd.L = tarea.shape[1]
-  MOM6_grd.M = tarea.shape[0]
-  print(&#39;MOM6 grid was successfully loaded... \n&#39;)
-  return MOM6_grd
+  <span class="c1"># fill grid object</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">tlon</span> <span class="o">=</span> <span class="n">tlon</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">tlat</span> <span class="o">=</span> <span class="n">tlat</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">ulon</span> <span class="o">=</span> <span class="n">ulon</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">ulat</span> <span class="o">=</span> <span class="n">ulat</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">vlon</span> <span class="o">=</span> <span class="n">vlon</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">vlat</span> <span class="o">=</span> <span class="n">vlat</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">qlon</span> <span class="o">=</span> <span class="n">qlon</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">qlat</span> <span class="o">=</span> <span class="n">qlat</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">dxt</span> <span class="o">=</span> <span class="n">dxt</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">dyt</span> <span class="o">=</span> <span class="n">dyt</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">dxCv</span> <span class="o">=</span> <span class="n">dxCv</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">dyCu</span> <span class="o">=</span> <span class="n">dyCu</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="n">angle</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">tarea</span> <span class="o">=</span> <span class="n">tarea</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">tarea</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">MOM6_grd</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">tarea</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;MOM6 grid was successfully loaded... </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">MOM6_grd</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sg_path = &#39;/glade/p/cesmdata/cseg/inputdata/ocn/mom/tx0.66v1/&#39;
-grd = MOM6grid(&#39;../supergrid/ORCA_gridgen/ocean_hgrid_trimmed.nc&#39;)
-ocn_qlon = grd.qlon
-ocn_qlat = grd.qlat
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sg_path</span> <span class="o">=</span> <span class="s1">&#39;/glade/p/cesmdata/cseg/inputdata/ocn/mom/tx0.66v1/&#39;</span>
+<span class="n">grd</span> <span class="o">=</span> <span class="n">MOM6grid</span><span class="p">(</span><span class="s1">&#39;../supergrid/ORCA_gridgen/ocean_hgrid_trimmed.nc&#39;</span><span class="p">)</span>
+<span class="n">ocn_qlon</span> <span class="o">=</span> <span class="n">grd</span><span class="o">.</span><span class="n">qlon</span>
+<span class="n">ocn_qlat</span> <span class="o">=</span> <span class="n">grd</span><span class="o">.</span><span class="n">qlat</span>
 </pre></div>
 </div>
 </div>
@@ -574,9 +584,9 @@ ocn_qlat = grd.qlat
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ocn_mask = netCDF4.Dataset(&#39;../topography/topo.tx1_4v1.SRTM15_V2.4.SmL1.0_C1.0.nc&#39;).variables[&#39;mask&#39;][:,:]
-ocn_nj, ocn_ni = ocn_mask.shape
-plt.pcolormesh(ocn_qlon, ocn_qlat, ocn_mask); plt.colorbar();
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ocn_mask</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;../topography/topo.tx1_4v1.SRTM15_V2.4.SmL1.0_C1.0.nc&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">][:,:]</span>
+<span class="n">ocn_nj</span><span class="p">,</span> <span class="n">ocn_ni</span> <span class="o">=</span> <span class="n">ocn_mask</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">ocn_qlon</span><span class="p">,</span> <span class="n">ocn_qlat</span><span class="p">,</span> <span class="n">ocn_mask</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
@@ -589,17 +599,17 @@ plt.pcolormesh(ocn_qlon, ocn_qlat, ocn_mask); plt.colorbar();
 <h2>Read SeaWIFS data<a class="headerlink" href="#read-seawifs-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>src_nc = netCDF4.Dataset(&#39;ncfiles/SeaWIFS.L3m_MC_CHL_chlor_a_0.25deg.nc&#39;)
-src_data = src_nc.variables[&#39;chlor_a&#39;]
-src_nj, src_ni = src_data.shape[-2], src_data.shape[-1]
-print(&#39;src shape = %i x %i&#39;%(src_nj,src_ni))
-src_lon = src_nc.variables[src_data.dimensions[-1]]
-src_lat = src_nc.variables[src_data.dimensions[-2]]
-src_lat = ((numpy.arange(src_nj)+0.5)/src_nj - 0.5)*180. # Recompute as doubles
-src_x0 = int( ( src_lon[0] + src_lon[-1] )/2 + 0.5) - 180.
-src_lon = ((numpy.arange(src_ni)+0.5)/src_ni)*360.+src_x0 # Recompute as doubles
-src_qlat = ((numpy.arange(src_nj+1))/src_nj - 0.5)*180. # For plotting
-src_qlon = ((numpy.arange(src_ni+1))/src_ni)*360.+src_x0 # For plotting
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">src_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;ncfiles/SeaWIFS.L3m_MC_CHL_chlor_a_0.25deg.nc&#39;</span><span class="p">)</span>
+<span class="n">src_data</span> <span class="o">=</span> <span class="n">src_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;chlor_a&#39;</span><span class="p">]</span>
+<span class="n">src_nj</span><span class="p">,</span> <span class="n">src_ni</span> <span class="o">=</span> <span class="n">src_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">src_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;src shape = </span><span class="si">%i</span><span class="s1"> x </span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">src_nj</span><span class="p">,</span><span class="n">src_ni</span><span class="p">))</span>
+<span class="n">src_lon</span> <span class="o">=</span> <span class="n">src_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">src_data</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">src_lat</span> <span class="o">=</span> <span class="n">src_nc</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="n">src_data</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]]</span>
+<span class="n">src_lat</span> <span class="o">=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">src_nj</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">/</span><span class="n">src_nj</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="mf">180.</span> <span class="c1"># Recompute as doubles</span>
+<span class="n">src_x0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="p">(</span> <span class="n">src_lon</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">src_lon</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.</span>
+<span class="n">src_lon</span> <span class="o">=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">src_ni</span><span class="p">)</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">/</span><span class="n">src_ni</span><span class="p">)</span><span class="o">*</span><span class="mf">360.</span><span class="o">+</span><span class="n">src_x0</span> <span class="c1"># Recompute as doubles</span>
+<span class="n">src_qlat</span> <span class="o">=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">src_nj</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">src_nj</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="mf">180.</span> <span class="c1"># For plotting</span>
+<span class="n">src_qlon</span> <span class="o">=</span> <span class="p">((</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">src_ni</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">src_ni</span><span class="p">)</span><span class="o">*</span><span class="mf">360.</span><span class="o">+</span><span class="n">src_x0</span> <span class="c1"># For plotting</span>
 </pre></div>
 </div>
 </div>
@@ -611,7 +621,7 @@ src_qlon = ((numpy.arange(src_ni+1))/src_ni)*360.+src_x0 # For plotting
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.pcolormesh(numpy.ma.log10(src_data[0,::-1,:])); plt.colorbar();
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">src_data</span><span class="p">[</span><span class="mi">0</span><span class="p">,::</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]));</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
@@ -621,42 +631,42 @@ src_qlon = ((numpy.arange(src_ni+1))/src_ni)*360.+src_x0 # For plotting
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def super_sample_grid(ocn_qlat, ocn_qlon, ocn_mask, src_nj, src_ni):
-    nj, ni = ocn_mask.shape
-    fac = 1
-    while fac*nj&lt;src_nj and fac*ni&lt;src_ni:
-        fac += 1
-    lon = numpy.zeros( (nj,fac,ni,fac) )
-    lat = numpy.zeros( (nj,fac,ni,fac) )
-    mask = numpy.zeros( (nj,fac,ni,fac) )
-    for j in range(fac):
-        ya = ( 2*j+1 ) / ( 2*fac )
-        yb = 1. - ya
-        for i in range(fac):
-            xa = ( 2*i+1 ) / ( 2*fac )
-            xb = 1. - xa
-            lon[:,j,:,i] = (  yb * ( xb * ocn_qlon[:-1,:-1] + xa * ocn_qlon[:-1,1:] )
-                            + ya * ( xb * ocn_qlon[1:,:-1] + xa * ocn_qlon[1:,1:] ) )
-            lat[:,j,:,i] = (  yb * ( xb * ocn_qlat[:-1,:-1] + xa * ocn_qlat[:-1,1:] )
-                            + ya * ( xb * ocn_qlat[1:,:-1] + xa * ocn_qlat[1:,1:] ) )
-    return lat, lon
-spr_lat, spr_lon = super_sample_grid(ocn_qlat, ocn_qlon, ocn_mask, src_nj, src_ni)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">super_sample_grid</span><span class="p">(</span><span class="n">ocn_qlat</span><span class="p">,</span> <span class="n">ocn_qlon</span><span class="p">,</span> <span class="n">ocn_mask</span><span class="p">,</span> <span class="n">src_nj</span><span class="p">,</span> <span class="n">src_ni</span><span class="p">):</span>
+    <span class="n">nj</span><span class="p">,</span> <span class="n">ni</span> <span class="o">=</span> <span class="n">ocn_mask</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">fac</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">fac</span><span class="o">*</span><span class="n">nj</span><span class="o">&lt;</span><span class="n">src_nj</span> <span class="ow">and</span> <span class="n">fac</span><span class="o">*</span><span class="n">ni</span><span class="o">&lt;</span><span class="n">src_ni</span><span class="p">:</span>
+        <span class="n">fac</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">lon</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">nj</span><span class="p">,</span><span class="n">fac</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">fac</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">nj</span><span class="p">,</span><span class="n">fac</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">fac</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">nj</span><span class="p">,</span><span class="n">fac</span><span class="p">,</span><span class="n">ni</span><span class="p">,</span><span class="n">fac</span><span class="p">)</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">fac</span><span class="p">):</span>
+        <span class="n">ya</span> <span class="o">=</span> <span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">fac</span> <span class="p">)</span>
+        <span class="n">yb</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">ya</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">fac</span><span class="p">):</span>
+            <span class="n">xa</span> <span class="o">=</span> <span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">fac</span> <span class="p">)</span>
+            <span class="n">xb</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">xa</span>
+            <span class="n">lon</span><span class="p">[:,</span><span class="n">j</span><span class="p">,:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>  <span class="n">yb</span> <span class="o">*</span> <span class="p">(</span> <span class="n">xb</span> <span class="o">*</span> <span class="n">ocn_qlon</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">xa</span> <span class="o">*</span> <span class="n">ocn_qlon</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">:]</span> <span class="p">)</span>
+                            <span class="o">+</span> <span class="n">ya</span> <span class="o">*</span> <span class="p">(</span> <span class="n">xb</span> <span class="o">*</span> <span class="n">ocn_qlon</span><span class="p">[</span><span class="mi">1</span><span class="p">:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">xa</span> <span class="o">*</span> <span class="n">ocn_qlon</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:]</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="n">lat</span><span class="p">[:,</span><span class="n">j</span><span class="p">,:,</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>  <span class="n">yb</span> <span class="o">*</span> <span class="p">(</span> <span class="n">xb</span> <span class="o">*</span> <span class="n">ocn_qlat</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">xa</span> <span class="o">*</span> <span class="n">ocn_qlat</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">:]</span> <span class="p">)</span>
+                            <span class="o">+</span> <span class="n">ya</span> <span class="o">*</span> <span class="p">(</span> <span class="n">xb</span> <span class="o">*</span> <span class="n">ocn_qlat</span><span class="p">[</span><span class="mi">1</span><span class="p">:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">xa</span> <span class="o">*</span> <span class="n">ocn_qlat</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="mi">1</span><span class="p">:]</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span>
+<span class="n">spr_lat</span><span class="p">,</span> <span class="n">spr_lon</span> <span class="o">=</span> <span class="n">super_sample_grid</span><span class="p">(</span><span class="n">ocn_qlat</span><span class="p">,</span> <span class="n">ocn_qlon</span><span class="p">,</span> <span class="n">ocn_mask</span><span class="p">,</span> <span class="n">src_nj</span><span class="p">,</span> <span class="n">src_ni</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def latlon2ji(src_lat, src_lon, lat, lon):
-    nj, ni = len(src_lat), len(src_lon)
-    src_x0 = int( ( src_lon[0] + src_lon[-1] )/2 + 0.5) - 180.
-    j = numpy.maximum(0, numpy.floor( ( ( lat + 90. ) / 180. ) * nj - 0.5 ).astype(int))
-    i = numpy.mod( numpy.floor( ( ( lon - src_x0 ) / 360. ) * ni - 0.5 ), ni ).astype(int)
-    jp1 = numpy.minimum(nj-1, j+1)
-    ip1 = numpy.mod(i+1, ni)
-    return j,i,jp1,ip1
-y, x = src_lat[0], src_lon[0]
-latlon2ji(src_lat, src_lon, y, x)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">latlon2ji</span><span class="p">(</span><span class="n">src_lat</span><span class="p">,</span> <span class="n">src_lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">):</span>
+    <span class="n">nj</span><span class="p">,</span> <span class="n">ni</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_lat</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">src_lon</span><span class="p">)</span>
+    <span class="n">src_x0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="p">(</span> <span class="n">src_lon</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">src_lon</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span> <span class="p">(</span> <span class="p">(</span> <span class="n">lat</span> <span class="o">+</span> <span class="mf">90.</span> <span class="p">)</span> <span class="o">/</span> <span class="mf">180.</span> <span class="p">)</span> <span class="o">*</span> <span class="n">nj</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span> <span class="n">numpy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span> <span class="p">(</span> <span class="p">(</span> <span class="n">lon</span> <span class="o">-</span> <span class="n">src_x0</span> <span class="p">)</span> <span class="o">/</span> <span class="mf">360.</span> <span class="p">)</span> <span class="o">*</span> <span class="n">ni</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="p">),</span> <span class="n">ni</span> <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">jp1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">nj</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ip1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">ni</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">jp1</span><span class="p">,</span><span class="n">ip1</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">src_lat</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">src_lon</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">latlon2ji</span><span class="p">(</span><span class="n">src_lat</span><span class="p">,</span> <span class="n">src_lon</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -668,125 +678,125 @@ latlon2ji(src_lat, src_lon, y, x)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def super_interp(src_lat, src_lon, data, spr_lat, spr_lon):
-    nj, ni = data.shape
-    dy, dx = 180./nj, 360./ni
-    j0, i0, j1, i1 = latlon2ji(src_lat, src_lon, spr_lat, spr_lon)
-    def ydist(lat0, lat1):
-        return numpy.abs( lat1-lat0 )
-    def xdist(lon0, lon1):
-        return numpy.abs( numpy.mod((lon1-lon0)+180, 360) - 180 )
-    w_e = xdist( src_lon[i0], spr_lon) / dx
-    w_w = 1. - w_e
-    w_n = ydist( src_lat[j0], spr_lat) / dy
-    w_s = 1. - w_n
-    return ( w_s*w_w * data[j0,i0] + w_n*w_e * data[j1,i1] ) + ( w_n*w_w * data[j1,i0] + w_s*w_e * data[j0,i1] )
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">super_interp</span><span class="p">(</span><span class="n">src_lat</span><span class="p">,</span> <span class="n">src_lon</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">spr_lat</span><span class="p">,</span> <span class="n">spr_lon</span><span class="p">):</span>
+    <span class="n">nj</span><span class="p">,</span> <span class="n">ni</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">dy</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="mf">180.</span><span class="o">/</span><span class="n">nj</span><span class="p">,</span> <span class="mf">360.</span><span class="o">/</span><span class="n">ni</span>
+    <span class="n">j0</span><span class="p">,</span> <span class="n">i0</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">i1</span> <span class="o">=</span> <span class="n">latlon2ji</span><span class="p">(</span><span class="n">src_lat</span><span class="p">,</span> <span class="n">src_lon</span><span class="p">,</span> <span class="n">spr_lat</span><span class="p">,</span> <span class="n">spr_lon</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">ydist</span><span class="p">(</span><span class="n">lat0</span><span class="p">,</span> <span class="n">lat1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span> <span class="n">lat1</span><span class="o">-</span><span class="n">lat0</span> <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">xdist</span><span class="p">(</span><span class="n">lon0</span><span class="p">,</span> <span class="n">lon1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mod</span><span class="p">((</span><span class="n">lon1</span><span class="o">-</span><span class="n">lon0</span><span class="p">)</span><span class="o">+</span><span class="mi">180</span><span class="p">,</span> <span class="mi">360</span><span class="p">)</span> <span class="o">-</span> <span class="mi">180</span> <span class="p">)</span>
+    <span class="n">w_e</span> <span class="o">=</span> <span class="n">xdist</span><span class="p">(</span> <span class="n">src_lon</span><span class="p">[</span><span class="n">i0</span><span class="p">],</span> <span class="n">spr_lon</span><span class="p">)</span> <span class="o">/</span> <span class="n">dx</span>
+    <span class="n">w_w</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">w_e</span>
+    <span class="n">w_n</span> <span class="o">=</span> <span class="n">ydist</span><span class="p">(</span> <span class="n">src_lat</span><span class="p">[</span><span class="n">j0</span><span class="p">],</span> <span class="n">spr_lat</span><span class="p">)</span> <span class="o">/</span> <span class="n">dy</span>
+    <span class="n">w_s</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">w_n</span>
+    <span class="k">return</span> <span class="p">(</span> <span class="n">w_s</span><span class="o">*</span><span class="n">w_w</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">j0</span><span class="p">,</span><span class="n">i0</span><span class="p">]</span> <span class="o">+</span> <span class="n">w_n</span><span class="o">*</span><span class="n">w_e</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">j1</span><span class="p">,</span><span class="n">i1</span><span class="p">]</span> <span class="p">)</span> <span class="o">+</span> <span class="p">(</span> <span class="n">w_n</span><span class="o">*</span><span class="n">w_w</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">j1</span><span class="p">,</span><span class="n">i0</span><span class="p">]</span> <span class="o">+</span> <span class="n">w_s</span><span class="o">*</span><span class="n">w_e</span> <span class="o">*</span> <span class="n">data</span><span class="p">[</span><span class="n">j0</span><span class="p">,</span><span class="n">i1</span><span class="p">]</span> <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def fill_missing_data(idata, mask, verbose=True, maxiter=0, debug=False, stabilizer=1.e-14):
-    &quot;&quot;&quot;
-    Returns data with masked values objectively interpolated except where mask==0.
-    
-    Arguments:
-    data - numpy.ma.array with mask==True where there is missing data or land.
-    mask - numpy.array of 0 or 1, 0 for land, 1 for ocean.
-    
-    Returns a numpy.ma.array.
-    &quot;&quot;&quot;
-    nj,ni = idata.shape
-    fdata = idata.filled(0.) # Working with an ndarray is faster than working with a masked array
-    if debug:
-        plt.figure(); plt.pcolormesh(mask); plt.title(&#39;mask&#39;); plt.colorbar();
-        #plt.figure(); plt.pcolormesh(idata.mask); plt.title(&#39;idata.mask&#39;); plt.colorbar();
-        plt.figure(); plt.pcolormesh(idata); plt.title(&#39;idata&#39;); plt.colorbar();
-        plt.figure(); plt.pcolormesh(idata.filled(3.)); plt.title(&#39;idata.filled&#39;); plt.colorbar();
-        plt.figure(); plt.pcolormesh(idata.filled(3.)); plt.title(&#39;fdata&#39;); plt.colorbar();
-    missing_j, missing_i = numpy.where( idata.mask &amp; (mask&gt;0) )
-    n_missing = missing_i.size
-    if verbose:
-        print(&#39;Data shape: %i x %i = %i with %i missing values&#39;%(nj, ni, nj*ni, numpy.count_nonzero(idata.mask)))
-        print(&#39;Mask shape: %i x %i = %i with %i land cells&#39;%(mask.shape[0], mask.shape[1],
-                                                                 numpy.prod(mask.shape), numpy.count_nonzero(1-mask)))
-        print(&#39;Data has %i missing values in ocean&#39;%(n_missing))
-        print(&#39;Data range: %g .. %g &#39;%(idata.min(),idata.max()))
-    # ind contains column of matrix/row of vector corresponding to point [j,i]
-    ind = numpy.zeros( fdata.shape, dtype=int ) - int(1e6)
-    ind[missing_j,missing_i] = numpy.arange( n_missing )
-    if verbose: print(&#39;Building matrix&#39;)
-    A = scipy.sparse.lil_matrix( (n_missing, n_missing) )
-    b = numpy.zeros( (n_missing) )
-    ld = numpy.zeros( (n_missing) )
-    A[range(n_missing),range(n_missing)] = 0.
-    if verbose: print(&#39;Looping over cells&#39;)
-    for n in range(n_missing):
-        j,i = missing_j[n],missing_i[n]
-        im1 = ( i + ni - 1 ) % ni
-        ip1 = ( i + 1 ) % ni
-        jm1 = max( j-1, 0)
-        jp1 = min( j+1, nj-1)
-        if j&gt;0 and mask[jm1,i]&gt;0:
-            ld[n] -= 1.
-            ij = ind[jm1,i]
-            if ij&gt;=0:
-                A[n,ij] = 1.
-            else:
-                b[n] -= fdata[jm1,i]
-        if mask[j,im1]&gt;0:
-            ld[n] -= 1.
-            ij = ind[j,im1]
-            if ij&gt;=0:
-                A[n,ij] = 1.
-            else:
-                b[n] -= fdata[j,im1]
-        if mask[j,ip1]&gt;0:
-            ld[n] -= 1.
-            ij = ind[j,ip1]
-            if ij&gt;=0:
-                A[n,ij] = 1.
-            else:
-                b[n] -= fdata[j,ip1]
-        if j&lt;nj-1 and mask[jp1,i]&gt;0:
-            ld[n] -= 1.
-            ij = ind[jp1,i]
-            if ij&gt;=0:
-                A[n,ij] = 1.
-            else:
-                b[n] -= fdata[jp1,i]
-        if j==nj-1 and mask[j,ni-1-i]&gt;0: # Tri-polar fold
-            ld[n] -= 1.
-            ij = ind[j,ni-1-i]
-            if ij&gt;=0:
-                A[n,ij] = 1.
-            else:
-                b[n] -= fdata[j,ni-1-i]
-    if debug:
-        tmp = numpy.zeros((nj,ni)); tmp[ missing_j, missing_i ] = b
-        plt.figure(); plt.pcolormesh(tmp); plt.title(&#39;b (initial)&#39;); plt.colorbar();
-    # Set leading diagonal
-    b[ld&gt;=0] = 0.
-    A[range(n_missing),range(n_missing)] = ld - stabilizer
-    if debug:
-        tmp = numpy.zeros((nj,ni)); tmp[ missing_j, missing_i ] = b
-        plt.figure(); plt.pcolormesh(tmp); plt.title(&#39;b (final)&#39;); plt.colorbar();
-        tmp = numpy.ones((nj,ni)); tmp[ missing_j, missing_i ] = A.diagonal()
-        plt.figure(); plt.pcolormesh(tmp); plt.title(&#39;A[i,i]&#39;); plt.colorbar();
-    if verbose: print(&#39;Matrix constructed&#39;)
-    A = scipy.sparse.csr_matrix(A)
-    if verbose: print(&#39;Matrix converted&#39;)
-    new_data = numpy.ma.array( fdata, mask=(mask==0))
-    if maxiter is None:
-        x,info = scipy.sparse.linalg.bicg(A, b)
-    elif maxiter==0:
-        x = scipy.sparse.linalg.spsolve(A, b)
-    else:
-        x,info = scipy.sparse.linalg.bicg(A, b, maxiter=maxiter)
-    if verbose: print(&#39;Matrix inverted&#39;)
-    new_data[missing_j,missing_i] = x
-    return new_data
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fill_missing_data</span><span class="p">(</span><span class="n">idata</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stabilizer</span><span class="o">=</span><span class="mf">1.e-14</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns data with masked values objectively interpolated except where mask==0.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">    data - numpy.ma.array with mask==True where there is missing data or land.</span>
+<span class="sd">    mask - numpy.array of 0 or 1, 0 for land, 1 for ocean.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns a numpy.ma.array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nj</span><span class="p">,</span><span class="n">ni</span> <span class="o">=</span> <span class="n">idata</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">fdata</span> <span class="o">=</span> <span class="n">idata</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="mf">0.</span><span class="p">)</span> <span class="c1"># Working with an ndarray is faster than working with a masked array</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">mask</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;mask&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
+        <span class="c1">#plt.figure(); plt.pcolormesh(idata.mask); plt.title(&#39;idata.mask&#39;); plt.colorbar();</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">idata</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;idata&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">idata</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="mf">3.</span><span class="p">));</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;idata.filled&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">idata</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="mf">3.</span><span class="p">));</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;fdata&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
+    <span class="n">missing_j</span><span class="p">,</span> <span class="n">missing_i</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="n">idata</span><span class="o">.</span><span class="n">mask</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mask</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">n_missing</span> <span class="o">=</span> <span class="n">missing_i</span><span class="o">.</span><span class="n">size</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Data shape: </span><span class="si">%i</span><span class="s1"> x </span><span class="si">%i</span><span class="s1"> = </span><span class="si">%i</span><span class="s1"> with </span><span class="si">%i</span><span class="s1"> missing values&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">nj</span><span class="p">,</span> <span class="n">ni</span><span class="p">,</span> <span class="n">nj</span><span class="o">*</span><span class="n">ni</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">idata</span><span class="o">.</span><span class="n">mask</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mask shape: </span><span class="si">%i</span><span class="s1"> x </span><span class="si">%i</span><span class="s1"> = </span><span class="si">%i</span><span class="s1"> with </span><span class="si">%i</span><span class="s1"> land cells&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                                 <span class="n">numpy</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">mask</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Data has </span><span class="si">%i</span><span class="s1"> missing values in ocean&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">n_missing</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Data range: </span><span class="si">%g</span><span class="s1"> .. </span><span class="si">%g</span><span class="s1"> &#39;</span><span class="o">%</span><span class="p">(</span><span class="n">idata</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">idata</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+    <span class="c1"># ind contains column of matrix/row of vector corresponding to point [j,i]</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="n">fdata</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span> <span class="p">)</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1e6</span><span class="p">)</span>
+    <span class="n">ind</span><span class="p">[</span><span class="n">missing_j</span><span class="p">,</span><span class="n">missing_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span> <span class="n">n_missing</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Building matrix&#39;</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">lil_matrix</span><span class="p">(</span> <span class="p">(</span><span class="n">n_missing</span><span class="p">,</span> <span class="n">n_missing</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">n_missing</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">ld</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span> <span class="p">(</span><span class="n">n_missing</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">A</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">n_missing</span><span class="p">),</span><span class="nb">range</span><span class="p">(</span><span class="n">n_missing</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Looping over cells&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_missing</span><span class="p">):</span>
+        <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="o">=</span> <span class="n">missing_j</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="n">missing_i</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+        <span class="n">im1</span> <span class="o">=</span> <span class="p">(</span> <span class="n">i</span> <span class="o">+</span> <span class="n">ni</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">%</span> <span class="n">ni</span>
+        <span class="n">ip1</span> <span class="o">=</span> <span class="p">(</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">%</span> <span class="n">ni</span>
+        <span class="n">jm1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span> <span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">jp1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">nj</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">j</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">mask</span><span class="p">[</span><span class="n">jm1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ld</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">1.</span>
+            <span class="n">ij</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="n">jm1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ij</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">A</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">ij</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="n">fdata</span><span class="p">[</span><span class="n">jm1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">mask</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">im1</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ld</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">1.</span>
+            <span class="n">ij</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">im1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ij</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">A</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">ij</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="n">fdata</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">im1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">mask</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">ip1</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ld</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">1.</span>
+            <span class="n">ij</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">ip1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ij</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">A</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">ij</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="n">fdata</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">ip1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">nj</span><span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">mask</span><span class="p">[</span><span class="n">jp1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ld</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">1.</span>
+            <span class="n">ij</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="n">jp1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ij</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">A</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">ij</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="n">fdata</span><span class="p">[</span><span class="n">jp1</span><span class="p">,</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">j</span><span class="o">==</span><span class="n">nj</span><span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">mask</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">ni</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span> <span class="c1"># Tri-polar fold</span>
+            <span class="n">ld</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">1.</span>
+            <span class="n">ij</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">ni</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ij</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">A</span><span class="p">[</span><span class="n">n</span><span class="p">,</span><span class="n">ij</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">-=</span> <span class="n">fdata</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">ni</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nj</span><span class="p">,</span><span class="n">ni</span><span class="p">));</span> <span class="n">tmp</span><span class="p">[</span> <span class="n">missing_j</span><span class="p">,</span> <span class="n">missing_i</span> <span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;b (initial)&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
+    <span class="c1"># Set leading diagonal</span>
+    <span class="n">b</span><span class="p">[</span><span class="n">ld</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">A</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="n">n_missing</span><span class="p">),</span><span class="nb">range</span><span class="p">(</span><span class="n">n_missing</span><span class="p">)]</span> <span class="o">=</span> <span class="n">ld</span> <span class="o">-</span> <span class="n">stabilizer</span>
+    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nj</span><span class="p">,</span><span class="n">ni</span><span class="p">));</span> <span class="n">tmp</span><span class="p">[</span> <span class="n">missing_j</span><span class="p">,</span> <span class="n">missing_i</span> <span class="p">]</span> <span class="o">=</span> <span class="n">b</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;b (final)&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">nj</span><span class="p">,</span><span class="n">ni</span><span class="p">));</span> <span class="n">tmp</span><span class="p">[</span> <span class="n">missing_j</span><span class="p">,</span> <span class="n">missing_i</span> <span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;A[i,i]&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Matrix constructed&#39;</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Matrix converted&#39;</span><span class="p">)</span>
+    <span class="n">new_data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span> <span class="n">fdata</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="p">(</span><span class="n">mask</span><span class="o">==</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">maxiter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">info</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">bicg</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">maxiter</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">spsolve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">info</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">bicg</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">maxiter</span><span class="o">=</span><span class="n">maxiter</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Matrix inverted&#39;</span><span class="p">)</span>
+    <span class="n">new_data</span><span class="p">[</span><span class="n">missing_j</span><span class="p">,</span><span class="n">missing_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+    <span class="k">return</span> <span class="n">new_data</span>
 </pre></div>
 </div>
 </div>
@@ -796,14 +806,14 @@ latlon2ji(src_lat, src_lon, y, x)
 <h2>Read Chla dataset for tx1_4v1<a class="headerlink" href="#read-chla-dataset-for-tx1-4v1" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>chla_tx1_4 = netCDF4.Dataset(&#39;seawifs-clim-1997-2010-tx1_4v1.nc&#39;, &#39;r+&#39;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chla_tx1_4</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;seawifs-clim-1997-2010-tx1_4v1.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>chlor_a = chla_tx1_4.variables[&#39;CHL_A&#39;][:]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chlor_a</span> <span class="o">=</span> <span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;CHL_A&#39;</span><span class="p">][:]</span>
 </pre></div>
 </div>
 </div>
@@ -813,12 +823,12 @@ latlon2ji(src_lat, src_lon, y, x)
 <h2>Main loop<a class="headerlink" href="#main-loop" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for t in range(src_data.shape[0]):
-#for t in range(1):
-    q_int = super_interp(src_lat, src_lon, src_data[t,::-1,:], spr_lat, spr_lon)
-    q_int = q_int.swapaxes(1,2).reshape((ocn_nj,ocn_ni,q_int.shape[3]*q_int.shape[-1])).mean(axis=-1)
-    q = q_int * ocn_mask
-    chlor_a[t,:] = fill_missing_data(q, ocn_mask)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">src_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+<span class="c1">#for t in range(1):</span>
+    <span class="n">q_int</span> <span class="o">=</span> <span class="n">super_interp</span><span class="p">(</span><span class="n">src_lat</span><span class="p">,</span> <span class="n">src_lon</span><span class="p">,</span> <span class="n">src_data</span><span class="p">[</span><span class="n">t</span><span class="p">,::</span><span class="o">-</span><span class="mi">1</span><span class="p">,:],</span> <span class="n">spr_lat</span><span class="p">,</span> <span class="n">spr_lon</span><span class="p">)</span>
+    <span class="n">q_int</span> <span class="o">=</span> <span class="n">q_int</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">ocn_nj</span><span class="p">,</span><span class="n">ocn_ni</span><span class="p">,</span><span class="n">q_int</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">q_int</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">q_int</span> <span class="o">*</span> <span class="n">ocn_mask</span>
+    <span class="n">chlor_a</span><span class="p">[</span><span class="n">t</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">fill_missing_data</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">ocn_mask</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -940,14 +950,14 @@ Matrix inverted
 <h2>Compare result against original data<a class="headerlink" href="#compare-result-against-original-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for t in range(src_data.shape[0]):
-  fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(18,5.))
-  plt.suptitle(&#39;Month # {}&#39;.format(t+1))
-  ax[0].pcolormesh(grd.qlon, grd.qlat,numpy.ma.log10(chlor_a[t,:]),vmin=-2,vmax=2)
-  ax[0].set_title(&#39;chlor_a remapped to tx1_4v1&#39;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">src_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+  <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span><span class="mf">5.</span><span class="p">))</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Month # </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+  <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">grd</span><span class="o">.</span><span class="n">qlon</span><span class="p">,</span> <span class="n">grd</span><span class="o">.</span><span class="n">qlat</span><span class="p">,</span><span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">chlor_a</span><span class="p">[</span><span class="n">t</span><span class="p">,:]),</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;chlor_a remapped to tx1_4v1&#39;</span><span class="p">)</span>
     
-  ax[1].pcolormesh(numpy.ma.log10(src_data[t,::-1,:]),vmin=-2,vmax=2)
-  ax[1].set_title(&#39;original data&#39;)
+  <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">src_data</span><span class="p">[</span><span class="n">t</span><span class="p">,::</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]),</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;original data&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -970,36 +980,36 @@ Matrix inverted
 <h3>Save data<a class="headerlink" href="#save-data" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from datetime import datetime
-# Global attrs
-chla_tx1_4.title = &#39;Chlorophyll Concentration, OCI Algorithm, interpolated and objectivelly filled to tx1_4v1&#39;
-chla_tx1_4.repository = &#39;https://github.com/NCAR/tx1_4/chlorophyll/&#39;
-chla_tx1_4.authors = &#39;Gustavo Marques (gmarques@ucar.edu) and Frank Bryan (bryan@ucar.edu )&#39;
-chla_tx1_4.date = datetime.now().isoformat()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="c1"># Global attrs</span>
+<span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Chlorophyll Concentration, OCI Algorithm, interpolated and objectivelly filled to tx1_4v1&#39;</span>
+<span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">repository</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/NCAR/tx1_4/chlorophyll/&#39;</span>
+<span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">authors</span> <span class="o">=</span> <span class="s1">&#39;Gustavo Marques (gmarques@ucar.edu) and Frank Bryan (bryan@ucar.edu )&#39;</span>
+<span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>jm, im = numpy.shape(grd.tlon)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">jm</span><span class="p">,</span> <span class="n">im</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">grd</span><span class="o">.</span><span class="n">tlon</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>chla_tx1_4.variables[&#39;CHL_A&#39;][:,:,:] = chlor_a[:,:,:]
-chla_tx1_4.variables[&#39;LON&#39;][:] = grd.tlon[int(jm/2),:]
-chla_tx1_4.variables[&#39;LAT&#39;][:] = grd.tlat[:,int(im/2)]
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;CHL_A&#39;</span><span class="p">][:,:,:]</span> <span class="o">=</span> <span class="n">chlor_a</span><span class="p">[:,:,:]</span>
+<span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;LON&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">grd</span><span class="o">.</span><span class="n">tlon</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">jm</span><span class="o">/</span><span class="mi">2</span><span class="p">),:]</span>
+<span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;LAT&#39;</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">grd</span><span class="o">.</span><span class="n">tlat</span><span class="p">[:,</span><span class="nb">int</span><span class="p">(</span><span class="n">im</span><span class="o">/</span><span class="mi">2</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>chla_tx1_4.sync()
-chla_tx1_4.close()
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">sync</span><span class="p">()</span>
+<span class="n">chla_tx1_4</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

@@ -1,3 +1,3 @@
-# Runoff mapping generation
+# Runoff mapping files
 
 TODO

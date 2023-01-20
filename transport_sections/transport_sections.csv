@@ -1,0 +1,22 @@
+Name,Orientation,Lat1,Lat2,Lon1,Lon2
+Agulhas_section,NS,-69.8, -34.6, 20.1, 20.1
+Barents_opening,NS,78.93, 78.93,-5.2, 18.8
+Bering_Strait,EW,66.6,66.6,-174,-172
+Davis_Strait,EW,69.5, 69.5, -53.1, -46.2
+Denmark_Strait,EW,65.0, 65.0, -38.0, -22.5
+Drake_Passage,NS,-67.2,-55.2,-67.0,-67.0
+English_Channel,NS,51.0, 52.2, 0.0, 0.0
+Fram_Strait,EW, 80.5, 80.5, -21.0, -10.4
+Florida_Bahamas, EW, 25.262, 25.262, -80.26, -78.24
+Florida_Bahamas_extended, EW, 25.262, 25.262, -78., -72.0
+Florida_Cuba, NS, 23.1, 25.05, -80.75, -80.75
+Gibraltar_Strait,NS,34.8, 36.6, -6.5, -6.5
+Iceland_Norway,EW,65.0, 65.0, -17.0, 1.5
+Indonesian_Throughflow, EW,-7.0, -7.0, -246.5, -220.8
+Mozambique_Channel, EW, -16.2, -16.2, 39.9, 44.7
+Pacific_undercurrent, NS,-2,2,-155,-155
+Taiwan_Luzon, NS,18.5, 22.1, -239.0, -239.0
+Windward_Passage, EW, 19.96, 19.96, -74.25,-73.2
+Robeson_Channel, NS, 83.3, 83.6, -34.8, -34.8
+Yucatan_Channel, EW, 21.5, 21.5, -87.0, -83.0
+Bosporus_Strait, EW, 42.9, 42.9, 28.4, 28.8

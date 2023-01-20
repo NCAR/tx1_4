@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Surface restoring datasets &#8212; 1/4 degree global configuration for CESM/MOM6</title>
+    <title>Surface restoring &#8212; 1/4 degree global configuration for CESM/MOM6</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,7 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Mapping Wave Dissipation dataset needed for MOM6+CVMix tidal parameterization." href="../tidal_energy_dissipation/regrid_tidal_dissipation.html" />
+    <link rel="next" title="Wave Dissipation dataset" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html" />
     <link rel="prev" title="Initial Conditions" href="../initial_conditions/ics.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -133,22 +133,22 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Surface restoring datasets
+   Surface restoring
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html">
-   Mapping Wave Dissipation dataset needed for MOM6+CVMix tidal parameterization.
+   Wave Dissipation dataset
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../chlorophyll/chlo.html">
-   Chlorophyll climatology
+  <a class="reference internal" href="../chlorophyll/Interpolate_and_fill_SeaWIFS.html">
+   Interpolate and fill SeaWIFS data
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="../vertical_sections/sections.html">
-   Vertical sections for online diagnostics
+  <a class="reference internal" href="../transport_sections/transport_sections.html">
+   Pre-defined transport sections
   </a>
  </li>
  <li class="toctree-l1">
@@ -380,11 +380,6 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#regrid-surface-salinity-and-potential-temperature-from-land-filled-woa-dataset-to-the-ocean-model-grid">
-   Regrid surface salinity and potential temperature from land filled WOA dataset to the ocean model grid.
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#read-tx1-4-grid">
    Read tx1_4 grid
   </a>
@@ -408,7 +403,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Surface restoring datasets</h1>
+                <h1>Surface restoring</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -418,11 +413,6 @@ title="Print to PDF"
                         </div>
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#regrid-surface-salinity-and-potential-temperature-from-land-filled-woa-dataset-to-the-ocean-model-grid">
-   Regrid surface salinity and potential temperature from land filled WOA dataset to the ocean model grid.
-  </a>
- </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#read-tx1-4-grid">
    Read tx1_4 grid
@@ -448,10 +438,9 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="surface-restoring-datasets">
-<h1>Surface restoring datasets<a class="headerlink" href="#surface-restoring-datasets" title="Permalink to this headline">#</a></h1>
-<section id="regrid-surface-salinity-and-potential-temperature-from-land-filled-woa-dataset-to-the-ocean-model-grid">
-<h2>Regrid surface salinity and potential temperature from land filled WOA dataset to the ocean model grid.<a class="headerlink" href="#regrid-surface-salinity-and-potential-temperature-from-land-filled-woa-dataset-to-the-ocean-model-grid" title="Permalink to this headline">#</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="surface-restoring">
+<h1>Surface restoring<a class="headerlink" href="#surface-restoring" title="Permalink to this headline">#</a></h1>
+<p>Regrid surface salinity and potential temperature from land filled WOA dataset to the ocean model grid.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
@@ -463,7 +452,6 @@ title="Print to PDF"
 </div>
 </div>
 </div>
-</section>
 <section id="read-tx1-4-grid">
 <h2>Read tx1_4 grid<a class="headerlink" href="#read-tx1-4-grid" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
@@ -1233,7 +1221,7 @@ Attributes:
     <a class='right-next' id="next-link" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Mapping Wave Dissipation dataset needed for MOM6+CVMix tidal parameterization.</p>
+        <p class="prev-next-title">Wave Dissipation dataset</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

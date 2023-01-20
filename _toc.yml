@@ -9,6 +9,6 @@ chapters:
 - file: vertical_grids/vgrid.md
 - file: state_restoring/state_restoring.ipynb
 - file: tidal_energy_dissipation/regrid_tidal_dissipation.ipynb
-- file: chlorophyll/chlo.md
-- file: vertical_sections/sections.md
+- file: chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb
+- file: transport_sections/transport_sections.ipynb
 - file: seaice_files/ice.md

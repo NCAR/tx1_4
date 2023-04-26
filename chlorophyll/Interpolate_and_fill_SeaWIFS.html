@@ -1,48 +1,59 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Interpolate and fill SeaWIFS data &#8212; 1/4 degree global configuration for CESM/MOM6</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -50,430 +61,346 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chlorophyll/Interpolate_and_fill_SeaWIFS';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Pre-defined transport sections" href="../transport_sections/transport_sections.html" />
     <link rel="prev" title="Wave Dissipation dataset" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../README.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../_static/ncar_logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">1/4 degree global configuration for CESM/MOM6</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
-        <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../supergrid/orca_gridgen.html">
-   Supergrid
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../topography/topo.html">
-   Topography and land/ocean mask
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../mesh/mesh.html">
-   ESMF mesh
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../runoff_mapping/runoff.html">
-   Runoff mapping files
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../initial_conditions/ics.html">
-   Initial Conditions
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../state_restoring/state_restoring.html">
-   Surface restoring
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html">
-   Wave Dissipation dataset
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Interpolate and fill SeaWIFS data
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../transport_sections/transport_sections.html">
-   Pre-defined transport sections
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../seaice_files/ice.html">
-   Sea ice files and configuration
-  </a>
- </li>
+    
+    
+    <img src="../_static/ncar_logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/ncar_logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Model Setup</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../supergrid/orca_gridgen.html">Supergrid</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../topography/topo.html">Topography generation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mesh/mesh.html">Generate an ESMF mesh</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="../runoff_mapping/runoff.html">Runoff mapping files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../initial_conditions/ics.html">Initial Conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../state_restoring/state_restoring.html">Surface restoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html">Wave Dissipation dataset</a></li>
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Interpolate and fill SeaWIFS data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../transport_sections/transport_sections.html">Pre-defined transport sections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../seaice_files/ice.html">Sea ice files and configuration</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Model Validation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../woa18/woa18_to_tx1_4.html">Remap WOA18 to tx1_4</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/NCAR/tx1_4/main?urlpath=tree/docs/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/NCAR/tx1_4" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/NCAR/tx1_4/edit/main/docs/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/NCAR/tx1_4/issues/new?title=Issue%20on%20page%20%2Fchlorophyll/Interpolate_and_fill_SeaWIFS.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/NCAR/tx1_4"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="headerbtn__text-container">repository</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/NCAR/tx1_4/issues/new?title=Issue%20on%20page%20%2Fchlorophyll/Interpolate_and_fill_SeaWIFS.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-      <li>
-        <a href="https://github.com/NCAR/tx1_4/edit/main/docs/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Edit this page"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-pencil-alt"></i>
-  </span>
-<span class="headerbtn__text-container">suggest edit</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../_sources/chlorophyll/Interpolate_and_fill_SeaWIFS.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#read-mom6-grid-and-mask">
-   Read MOM6 grid and mask
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#read-seawifs-data">
-   Read SeaWIFS data
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#read-chla-dataset-for-tx1-4v1">
-   Read Chla dataset for tx1_4v1
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#main-loop">
-   Main loop
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#compare-result-against-original-data">
-   Compare result against original data
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#save-data">
-     Save data
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Interpolate and fill SeaWIFS data</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#read-mom6-grid-and-mask">
-   Read MOM6 grid and mask
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#read-seawifs-data">
-   Read SeaWIFS data
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#read-chla-dataset-for-tx1-4v1">
-   Read Chla dataset for tx1_4v1
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#main-loop">
-   Main loop
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#compare-result-against-original-data">
-   Compare result against original data
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#save-data">
-     Save data
-    </a>
-   </li>
-  </ul>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Interpolate and fill SeaWIFS data</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-mom6-grid-and-mask">Read MOM6 grid and mask</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-seawifs-data">Read SeaWIFS data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-chla-dataset-for-tx1-4v1">Read Chla dataset for tx1_4v1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-loop">Main loop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-result-against-original-data">Compare result against original data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#save-data">Save data</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section id="interpolate-and-fill-seawifs-data">
-<h1>Interpolate and fill SeaWIFS data<a class="headerlink" href="#interpolate-and-fill-seawifs-data" title="Permalink to this headline">#</a></h1>
+<h1>Interpolate and fill SeaWIFS data<a class="headerlink" href="#interpolate-and-fill-seawifs-data" title="Permalink to this heading">#</a></h1>
 <p>Adapted from: <a class="reference external" href="https://github.com/adcroft/interp_and_fill/blob/master/Interpolate%20and%20fill%20SeaWIFS.ipynb">https://github.com/adcroft/interp_and_fill/blob/master/Interpolate and fill SeaWIFS.ipynb</a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -488,7 +415,7 @@ title="Print to PDF"
 </div>
 </div>
 <section id="read-mom6-grid-and-mask">
-<h2>Read MOM6 grid and mask<a class="headerlink" href="#read-mom6-grid-and-mask" title="Permalink to this headline">#</a></h2>
+<h2>Read MOM6 grid and mask<a class="headerlink" href="#read-mom6-grid-and-mask" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">MOM6grid</span><span class="p">(</span><span class="n">supergrid</span><span class="p">):</span>
@@ -593,12 +520,12 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_5_0.png" src="../_images/Interpolate_and_fill_SeaWIFS_5_0.png" />
+<img alt="../_images/7a5ab518761fe40d0bfed4829d5b9bf790f7c07f53ccf00d23ec1bcd3b4ac0cb.png" src="../_images/7a5ab518761fe40d0bfed4829d5b9bf790f7c07f53ccf00d23ec1bcd3b4ac0cb.png" />
 </div>
 </div>
 </section>
 <section id="read-seawifs-data">
-<h2>Read SeaWIFS data<a class="headerlink" href="#read-seawifs-data" title="Permalink to this headline">#</a></h2>
+<h2>Read SeaWIFS data<a class="headerlink" href="#read-seawifs-data" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">src_nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;ncfiles/SeaWIFS.L3m_MC_CHL_chlor_a_0.25deg.nc&#39;</span><span class="p">)</span>
@@ -628,7 +555,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_8_0.png" src="../_images/Interpolate_and_fill_SeaWIFS_8_0.png" />
+<img alt="../_images/1cf3782132426f1b251e106e2ddd2bc867ca09754a033909b7e4e9040495eaad.png" src="../_images/1cf3782132426f1b251e106e2ddd2bc867ca09754a033909b7e4e9040495eaad.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -805,7 +732,7 @@ title="Print to PDF"
 </div>
 </section>
 <section id="read-chla-dataset-for-tx1-4v1">
-<h2>Read Chla dataset for tx1_4v1<a class="headerlink" href="#read-chla-dataset-for-tx1-4v1" title="Permalink to this headline">#</a></h2>
+<h2>Read Chla dataset for tx1_4v1<a class="headerlink" href="#read-chla-dataset-for-tx1-4v1" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chla_tx1_4</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="s1">&#39;seawifs-clim-1997-2010-tx1_4v1.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;r+&#39;</span><span class="p">)</span>
@@ -822,7 +749,7 @@ title="Print to PDF"
 </div>
 </section>
 <section id="main-loop">
-<h2>Main loop<a class="headerlink" href="#main-loop" title="Permalink to this headline">#</a></h2>
+<h2>Main loop<a class="headerlink" href="#main-loop" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">src_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -949,7 +876,7 @@ Matrix inverted
 </div>
 </section>
 <section id="compare-result-against-original-data">
-<h2>Compare result against original data<a class="headerlink" href="#compare-result-against-original-data" title="Permalink to this headline">#</a></h2>
+<h2>Compare result against original data<a class="headerlink" href="#compare-result-against-original-data" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">src_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -964,22 +891,22 @@ Matrix inverted
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_0.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_0.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_1.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_1.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_2.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_2.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_3.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_3.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_4.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_4.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_5.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_5.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_6.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_6.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_7.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_7.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_8.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_8.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_9.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_9.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_10.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_10.png" />
-<img alt="../_images/Interpolate_and_fill_SeaWIFS_19_11.png" src="../_images/Interpolate_and_fill_SeaWIFS_19_11.png" />
+<img alt="../_images/522ea333f409f02dd4f235caef30d96efbd711dcceb2bbf362b2626aadb62c87.png" src="../_images/522ea333f409f02dd4f235caef30d96efbd711dcceb2bbf362b2626aadb62c87.png" />
+<img alt="../_images/a563013593710d1f11eb1b8cdbbfab332ab6244d2daf8845c1007267ec5566cc.png" src="../_images/a563013593710d1f11eb1b8cdbbfab332ab6244d2daf8845c1007267ec5566cc.png" />
+<img alt="../_images/bc9f7f2bef69fe10d7c785d89f17ba834c6f99f7d537f706e6e4cc6a02393134.png" src="../_images/bc9f7f2bef69fe10d7c785d89f17ba834c6f99f7d537f706e6e4cc6a02393134.png" />
+<img alt="../_images/4bdd5c048ff80300c3079a6b9ebca192e9dea2ff3d0cfbc5fd02f6092b9fce62.png" src="../_images/4bdd5c048ff80300c3079a6b9ebca192e9dea2ff3d0cfbc5fd02f6092b9fce62.png" />
+<img alt="../_images/b5b1b6348c80cac2de8e12a1683467f604d20a5117bc87d6d3e21331da0e1dfe.png" src="../_images/b5b1b6348c80cac2de8e12a1683467f604d20a5117bc87d6d3e21331da0e1dfe.png" />
+<img alt="../_images/c1cdab30bf50d3ab7618ab0eef1f920a9ed1115fadeb127f88687fa1375a8000.png" src="../_images/c1cdab30bf50d3ab7618ab0eef1f920a9ed1115fadeb127f88687fa1375a8000.png" />
+<img alt="../_images/aeb293267d1165a5d1565e5e619aaeaff2be76628152aeb3e0c5baa4ab299b8b.png" src="../_images/aeb293267d1165a5d1565e5e619aaeaff2be76628152aeb3e0c5baa4ab299b8b.png" />
+<img alt="../_images/1f74098535ac068437aa1df76289e1ae50358db953d1dcf8e7e498ce297e2ac5.png" src="../_images/1f74098535ac068437aa1df76289e1ae50358db953d1dcf8e7e498ce297e2ac5.png" />
+<img alt="../_images/9514cbad3ab9bfba52e9094def560fe30961c7fdbc7ea8a835320a04ed8c33d0.png" src="../_images/9514cbad3ab9bfba52e9094def560fe30961c7fdbc7ea8a835320a04ed8c33d0.png" />
+<img alt="../_images/c1ed434210e3a37c9f8d6ded93f10eb19d43b9f55f66ac6f68ea70f82f3a1151.png" src="../_images/c1ed434210e3a37c9f8d6ded93f10eb19d43b9f55f66ac6f68ea70f82f3a1151.png" />
+<img alt="../_images/fde18202f55e2963eca57d5116e13f0dc019ee92b41f9cecdae53402cfab2847.png" src="../_images/fde18202f55e2963eca57d5116e13f0dc019ee92b41f9cecdae53402cfab2847.png" />
+<img alt="../_images/c6a99be24cba3d7668179a6aae56c570778159d638f9f01b2f2569de1895cd5d.png" src="../_images/c6a99be24cba3d7668179a6aae56c570778159d638f9f01b2f2569de1895cd5d.png" />
 </div>
 </div>
 <section id="save-data">
-<h3>Save data<a class="headerlink" href="#save-data" title="Permalink to this headline">#</a></h3>
+<h3>Save data<a class="headerlink" href="#save-data" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
@@ -1032,7 +959,7 @@ Matrix inverted
             mode: "conda-env-miniconda-dev2-py"
         },
         kernelOptions: {
-            kernelName: "conda-env-miniconda-dev2-py",
+            name: "conda-env-miniconda-dev2-py",
             path: "./chlorophyll"
         },
         predefinedOutput: true
@@ -1040,50 +967,112 @@ Matrix inverted
     </script>
     <script>kernelName = 'conda-env-miniconda-dev2-py'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../tidal_energy_dissipation/regrid_tidal_dissipation.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Wave Dissipation dataset</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../tidal_energy_dissipation/regrid_tidal_dissipation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Wave Dissipation dataset</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="../transport_sections/transport_sections.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="../transport_sections/transport_sections.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Pre-defined transport sections</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By The Ocean Model Working Group<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
-    
-</div>
-
-
       </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-mom6-grid-and-mask">Read MOM6 grid and mask</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-seawifs-data">Read SeaWIFS data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#read-chla-dataset-for-tx1-4v1">Read Chla dataset for tx1_4v1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-loop">Main loop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compare-result-against-original-data">Compare result against original data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#save-data">Save data</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Ocean Model Working Group
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

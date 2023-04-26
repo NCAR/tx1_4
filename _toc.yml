@@ -17,6 +17,7 @@ parts:
   - caption: Model Validation
     chapters:
     - file:  woa18/woa18_to_tx1_4.ipynb
-    - file:  mld/mld.dm
+    - file:  mld/mld.md
       sections:
       - file: mld/deBoyer2004/deBoyer2004_to_tx1_4.ipynb
+    - file:  ssh/aviso_ssh_to_tx1_4.ipynb
